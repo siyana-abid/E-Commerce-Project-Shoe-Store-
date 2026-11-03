@@ -1,0 +1,572 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Nike Air Max",
+      "category": "Sports",
+      "price": 4500,
+      "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+      "description": "Comfortable sports shoes",
+      "stock": 15
+    },
+    {
+      "id": "2",
+      "name": "Adidas Ultraboost",
+      "category": "Running",
+      "price": 5200,
+      "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+      "description": "Lightweight running shoes",
+      "stock": 15
+    },
+    {
+      "id": "3",
+      "name": "Puma Classic Sneakers",
+      "category": "Sneakers",
+      "price": 3200,
+      "image": "https://i.pinimg.com/736x/4e/ef/53/4eef53ef22b84e54f58c4be8f2abe54b.jpg",
+      "description": "Stylish everyday sneakers",
+      "stock": 15
+    },
+    {
+      "id": "4",
+      "name": "Classic White Shoes",
+      "category": "Casual",
+      "price": 2200,
+      "image": "https://i.pinimg.com/1200x/f1/64/90/f164903de8fded58017c443355c97ec0.jpg",
+      "description": "Simple everyday white shoes",
+      "stock": 15
+    },
+    {
+      "id": "5",
+      "name": "Nike Training Shoes",
+      "category": "Sports",
+      "price": 5000,
+      "image": "https://i.pinimg.com/736x/be/aa/f0/beaaf0967dc7349f6e2b6bebac060d25.jpg",
+      "description": "Shoes designed for training",
+      "stock": 15
+    },
+    {
+      "id": "6",
+      "name": "Running Sneakers",
+      "category": "Running",
+      "price": 3200,
+      "image": "https://i.pinimg.com/1200x/b3/07/a6/b307a603de0535295f6ad316942344a9.jpg",
+      "description": "Comfortable daily running shoes",
+      "stock": 15
+    },
+    {
+      "id": "7",
+      "name": "Air Jordan Retro",
+      "category": "Sneakers",
+      "price": 6500,
+      "image": "https://i.pinimg.com/736x/74/c6/fc/74c6fcaa3cab7a95381edd4078dae922.jpg",
+      "description": "Retro inspired sneakers",
+      "stock": 15
+    },
+    {
+      "id": "8",
+      "name": "Leather Formal Shoes",
+      "category": "Formal",
+      "price": 3800,
+      "image": "https://i.pinimg.com/1200x/1d/e1/0f/1de10f4eae8d209db086a8401ba9d3af.jpg",
+      "description": "Elegant formal leather shoes",
+      "stock": 15
+    },
+    {
+      "id": "9",
+      "name": "Puma Running Pro",
+      "category": "Running",
+      "price": 3600,
+      "image": "https://i.pinimg.com/736x/3b/fc/a7/3bfca736a6363041470fdb0d0692df15.jpg",
+      "description": "Flexible shoes for daily running",
+      "stock": 15
+    },
+    {
+      "id": "10",
+      "name": "Canvas Street Shoes",
+      "category": "Casual",
+      "price": 1800,
+      "image": "https://i.pinimg.com/736x/d5/c9/9a/d5c99a3012414c866ad4af068be7bad2.jpg",
+      "description": "Casual canvas footwear",
+      "stock": 15
+    },
+    {
+      "id": "11",
+      "name": "Classic Black Sneakers",
+      "category": "Sneakers",
+      "price": 2900,
+      "image": "https://i.pinimg.com/736x/6b/f0/e1/6bf0e17866653c558a3c2e85896b8b77.jpg",
+      "description": "Versatile black sneakers",
+      "stock": 15
+    },
+    {
+      "id": "12",
+      "name": "Adidas Sports Pro",
+      "category": "Sports",
+      "price": 4800,
+      "image": "https://i.pinimg.com/736x/8b/b7/c5/8bb7c5b92b8db4e5f5c1b92580d70d13.jpg",
+      "description": "Performance sports footwear",
+      "stock": 15
+    },
+    {
+      "id": "13",
+      "name": "Women's Flat Sandals",
+      "category": "Sandals",
+      "price": 1200,
+      "image": "https://i.pinimg.com/1200x/b5/19/b2/b519b2744da1ba673e75fd7960e78495.jpg",
+      "description": "Comfortable flat sandals",
+      "stock": 15
+    },
+    {
+      "id": "14",
+      "name": "Leather Ankle Boots",
+      "category": "Boots",
+      "price": 5500,
+      "image": "https://i.pinimg.com/736x/df/1c/dc/df1cdcfa58810f33fa3e1f62bf3d314a.jpg",
+      "description": "Stylish ankle boots",
+      "stock": 15
+    },
+    {
+      "id": "15",
+      "name": "Classic High Heels",
+      "category": "Heels",
+      "price": 2800,
+      "image": "https://i.pinimg.com/736x/19/2f/ec/192fecbc16edab9454b09b0cc7cde2ba.jpg",
+      "description": "Elegant high heel footwear",
+      "stock": 15
+    },
+    {
+      "id": "16",
+      "name": "Brown Office Shoes",
+      "category": "Formal",
+      "price": 4200,
+      "image": "https://i.pinimg.com/736x/63/9a/8d/639a8d281588274559b3abd093261bc0.jpg",
+      "description": "Smart brown office shoes",
+      "stock": 15
+    },
+    {
+      "id": "17",
+      "name": "Nike Revolution",
+      "category": "Running",
+      "price": 3400,
+      "image": "https://i.pinimg.com/1200x/91/f9/e8/91f9e8fb432323b0f8bfc88d918ace04.jpg",
+      "description": "Lightweight running footwear",
+      "stock": 15
+    },
+    {
+      "id": "18",
+      "name": "Everyday Slip-ons",
+      "category": "Casual",
+      "price": 1600,
+      "image": "https://i.pinimg.com/736x/11/96/2d/11962da06d37eb8e282427050903b420.jpg",
+      "description": "Easy to wear casual shoes",
+      "stock": 15
+    },
+    {
+      "id": "19",
+      "name": "White Platform Sneakers",
+      "category": "Sneakers",
+      "price": 3100,
+      "image": "https://i.pinimg.com/736x/72/e7/05/72e705bf9dff92200039e192090ab875.jpg",
+      "description": "Modern platform sneakers",
+      "stock": 15
+    },
+    {
+      "id": "20",
+      "name": "Sport Flex Shoes",
+      "category": "Sports",
+      "price": 3900,
+      "image": "https://i.pinimg.com/1200x/e8/70/b8/e870b8772ddb7d28072464909b3dd6a4.jpg",
+      "description": "Flexible sports shoes",
+      "stock": 15
+    },
+    {
+      "id": "21",
+      "name": "Summer Flat Sandals",
+      "category": "Sandals",
+      "price": 950,
+      "image": "https://i.pinimg.com/736x/ab/c2/ed/abc2edcecf15b364149cff4f73f7aaac.jpg",
+      "description": "Lightweight summer sandals",
+      "stock": 15
+    },
+    {
+      "id": "22",
+      "name": "Classic Chelsea Boots",
+      "category": "Boots",
+      "price": 4900,
+      "image": "https://i.pinimg.com/1200x/c3/02/0e/c3020ee687d2997cae25836057eb70cc.jpg",
+      "description": "Classic Chelsea style boots",
+      "stock": 15
+    },
+    {
+      "id": "23",
+      "name": "Party Wear Heels",
+      "category": "Heels",
+      "price": 3500,
+      "image": "https://i.pinimg.com/1200x/2c/dc/e8/2cdce82d77e090cb0019f7fc8d81d8cc.jpg",
+      "description": "Stylish party wear heels",
+      "stock": 15
+    },
+    {
+      "id": "24",
+      "name": "Black Oxford Shoes",
+      "category": "Formal",
+      "price": 4500,
+      "image": "https://i.pinimg.com/736x/2d/bf/19/2dbf19dbc114d9ac3733acb0fbbe6e9a.jpg",
+      "description": "Classic black Oxford shoes",
+      "stock": 15
+    },
+    {
+      "id": "25",
+      "name": "Air Zoom Running Shoes",
+      "category": "Running",
+      "price": 5800,
+      "image": "https://i.pinimg.com/736x/09/ad/f8/09adf866561e8e5fc801ab2a178c7639.jpg",
+      "description": "Responsive running shoes",
+      "stock": 15
+    },
+    {
+      "id": "26",
+      "name": "Retro Street Sneakers",
+      "category": "Sneakers",
+      "price": 3300,
+      "image": "https://i.pinimg.com/736x/56/7f/7a/567f7a8df8311c1b48785882433dbb30.jpg",
+      "description": "Retro street style sneakers",
+      "stock": 15
+    },
+    {
+      "id": "27",
+      "name": "Gym Training Shoes",
+      "category": "Sports",
+      "price": 4100,
+      "image": "https://i.pinimg.com/1200x/51/12/87/51128702b5ac17f5822e3c57136c4b7d.jpg",
+      "description": "Supportive gym training shoes",
+      "stock": 15
+    },
+    {
+      "id": "28",
+      "name": "Casual Loafers",
+      "category": "Casual",
+      "price": 2600,
+      "image": "https://i.pinimg.com/736x/cc/61/47/cc614736f37f9e29d9abe793828fdbd7.jpg",
+      "description": "Comfortable casual loafers",
+      "stock": 15
+    },
+    {
+      "id": "29",
+      "name": "Women's Comfort Sandals",
+      "category": "Sandals",
+      "price": 1400,
+      "image": "https://i.pinimg.com/736x/45/9f/ab/459fab5e7b66f2cc247f8a13b838f92b.jpg",
+      "description": "Comfortable everyday sandals",
+      "stock": 15
+    },
+    {
+      "id": "30",
+      "name": "Brown Leather Boots",
+      "category": "Boots",
+      "price": 6200,
+      "image": "https://i.pinimg.com/736x/35/38/a1/3538a1db55f9efb2e00e02d34f884f28.jpg",
+      "description": "Premium brown leather boots",
+      "stock": 15
+    },
+    {
+      "id": "31",
+      "name": "Block Heel Sandals",
+      "category": "Heels",
+      "price": 2400,
+      "image": "https://i.pinimg.com/1200x/03/89/32/0389327f61ca056f2bf540c43678c80f.jpg",
+      "description": "Comfortable block heel sandals",
+      "stock": 15
+    },
+    {
+      "id": "32",
+      "name": "Office Formal Loafers",
+      "category": "Formal",
+      "price": 3600,
+      "image": "https://i.pinimg.com/736x/2e/64/99/2e64997204a5d7008308b253d0c64259.jpg",
+      "description": "Smart formal loafers",
+      "stock": 15
+    },
+    {
+      "id": "33",
+      "name": "Adidas Running Lite",
+      "category": "Running",
+      "price": 3700,
+      "image": "https://i.pinimg.com/736x/ea/d8/5f/ead85ff84ff94fe693c0eba1d149753b.jpg",
+      "description": "Light and breathable running shoes",
+      "stock": 15
+    },
+    {
+      "id": "34",
+      "name": "High Top Sneakers",
+      "category": "Sneakers",
+      "price": 3400,
+      "image": "https://i.pinimg.com/736x/0b/b3/51/0bb351e1fcef692cfbc6cba2266febe1.jpg",
+      "description": "Trendy high top sneakers",
+      "stock": 15
+    },
+    {
+      "id": "35",
+      "name": "Outdoor Sports Shoes",
+      "category": "Sports",
+      "price": 4600,
+      "image": "https://i.pinimg.com/1200x/c2/83/9b/c2839b266752d79fcc27a8eebf7ab205.jpg",
+      "description": "Durable outdoor sports shoes",
+      "stock": 15
+    },
+    {
+      "id": "36",
+      "name": "Minimal Casual Shoes",
+      "category": "Casual",
+      "price": 2100,
+      "image": "https://i.pinimg.com/1200x/51/62/dd/5162dd7d699f5e5db103401542efc991.jpg",
+      "description": "Minimal everyday footwear",
+      "stock": 15
+    },
+    {
+      "id": "37",
+      "name": "Beach Sliders",
+      "category": "Sandals",
+      "price": 800,
+      "image": "https://i.pinimg.com/1200x/ac/e5/7f/ace57f59dcb73c59b4d4eeb2e4b844ea.jpg",
+      "description": "Easy to wear beach sliders",
+      "stock": 15
+    },
+    {
+      "id": "38",
+      "name": "Classic Lace-up Boots",
+      "category": "Boots",
+      "price": 5700,
+      "image": "https://i.pinimg.com/1200x/1f/fc/40/1ffc40a67842529986bccd31f8e95107.jpg",
+      "description": "Classic lace-up boots",
+      "stock": 15
+    },
+    {
+      "id": "39",
+      "name": "Elegant Stiletto Heels",
+      "category": "Heels",
+      "price": 3900,
+      "image": "https://i.pinimg.com/1200x/c8/cd/87/c8cd877c762f4c86e7e0a1845261af05.jpg",
+      "description": "Elegant stiletto heels",
+      "stock": 15
+    },
+    {
+      "id": "40",
+      "name": "Brown Derby Shoes",
+      "category": "Formal",
+      "price": 4300,
+      "image": "https://i.pinimg.com/736x/c8/4c/25/c84c2518da0335c5cd7158aa6419158b.jpg",
+      "description": "Classic brown Derby shoes",
+      "stock": 15
+    },
+    {
+      "id": "41",
+      "name": "Nike Pegasus",
+      "category": "Running",
+      "price": 5600,
+      "image": "https://i.pinimg.com/736x/34/80/9d/34809d69758f3d9eab4f99d55e6bb913.jpg",
+      "description": "Comfortable long distance running shoes",
+      "stock": 15
+    },
+    {
+      "id": "42",
+      "name": "Retro Chunky Sneakers",
+      "category": "Sneakers",
+      "price": 3800,
+      "image": "https://i.pinimg.com/1200x/5a/03/26/5a032638767ca514d73b6e1b8237e936.jpg",
+      "description": "Modern chunky sneakers",
+      "stock": 15
+    },
+    {
+      "id": "43",
+      "name": "Pro Basketball Shoes",
+      "category": "Sports",
+      "price": 6100,
+      "image": "https://i.pinimg.com/736x/5e/42/2d/5e422d4728ab404bfaf4dc7aaa30e2e4.jpg",
+      "description": "Supportive basketball footwear",
+      "stock": 15
+    },
+    {
+      "id": "44",
+      "name": "Everyday Walking Shoes",
+      "category": "Casual",
+      "price": 2300,
+      "image": "https://i.pinimg.com/736x/0e/58/26/0e58260f42ec11e77d7d2856560ad55b.jpg",
+      "description": "Comfortable walking shoes",
+      "stock": 15
+    },
+    {
+      "id": "45",
+      "name": "Strap Flat Sandals",
+      "category": "Sandals",
+      "price": 1100,
+      "image": "https://i.pinimg.com/736x/f9/c3/42/f9c3422b6b9d11602a37881ace22912c.jpg",
+      "description": "Simple strap flat sandals",
+      "stock": 15
+    },
+    {
+      "id": "46",
+      "name": "Suede Ankle Boots",
+      "category": "Boots",
+      "price": 5300,
+      "image": "https://i.pinimg.com/736x/d8/11/49/d81149fcf7f0b2a1f1f2f999c78625ac.jpg",
+      "description": "Stylish suede ankle boots",
+      "stock": 15
+    },
+    {
+      "id": "47",
+      "name": "Wedge Heel Sandals",
+      "category": "Heels",
+      "price": 2700,
+      "image": "https://i.pinimg.com/736x/89/aa/dc/89aadcd9aab147a176aec6ff52639820.jpg",
+      "description": "Stylish wedge heel sandals",
+      "stock": 15
+    },
+    {
+      "id": "48",
+      "name": "Classic Monk Strap Shoes",
+      "category": "Formal",
+      "price": 4700,
+      "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+      "description": "Elegant monk strap formal shoes",
+      "stock": 15
+    },
+    {
+      "id": "49",
+      "name": "Trail Running Shoes",
+      "category": "Running",
+      "price": 4900,
+      "image": "https://i.pinimg.com/736x/dd/a6/46/dda6469c7cff2bb6090b1e9754bca6f1.jpg",
+      "description": "Durable trail running footwear",
+      "stock": 15
+    },
+    {
+      "id": "50",
+      "name": "Minimal White Sneakers",
+      "category": "Sneakers",
+      "price": 3000,
+      "image": "https://i.pinimg.com/1200x/e8/4a/e0/e84ae03b5ae26c7f54e4022e5861dc74.jpg",
+      "description": "Clean minimal white sneakers",
+      "stock": 15
+    },
+    {
+      "id": "51",
+      "name": "Cross Training Shoes",
+      "category": "Sports",
+      "price": 4400,
+      "image": "https://i.pinimg.com/736x/b1/5c/70/b15c70166dd59139129efd3e45584fea.jpg",
+      "description": "Versatile cross training shoes",
+      "stock": 15
+    },
+    {
+      "id": "52",
+      "name": "Casual Everyday Slip-ons",
+      "category": "Casual",
+      "price": 1900,
+      "image": "https://i.pinimg.com/736x/ec/04/8b/ec048bde5504c6b9ebc19b0c97e5e8a7.jpg",
+      "description": "Easy everyday slip-on shoes",
+      "stock": 15
+    },
+    {
+      "id": "53",
+      "name": "Classic Women's Sandals",
+      "category": "Sandals",
+      "price": 1350,
+      "image": "https://i.pinimg.com/736x/c2/1e/2f/c21e2f24a8bbeab7f3c9da6b2b2c62fa.jpg",
+      "description": "Classic women's sandals",
+      "stock": 15
+    },
+    {
+      "id": "54",
+      "name": "Combat Style Boots",
+      "category": "Boots",
+      "price": 5900,
+      "image": "https://i.pinimg.com/1200x/ee/b5/05/eeb5057077b52f84502c52e521919e7b.jpg",
+      "description": "Bold combat style boots",
+      "stock": 15
+    },
+    {
+      "id": "55",
+      "name": "Classic Kitten Heels",
+      "category": "Heels",
+      "price": 2200,
+      "image": "https://i.pinimg.com/1200x/15/dd/e7/15dde72f21565ad88245d0d15e2427a6.jpg",
+      "description": "Elegant low heel footwear",
+      "stock": 15
+    },
+    {
+      "id": "56",
+      "name": "Premium Formal Shoes",
+      "category": "Formal",
+      "price": 5200,
+      "image": "https://i.pinimg.com/1200x/fb/ca/74/fbca7446a5661e0425a09972707f11d2.jpg",
+      "description": "Premium formal footwear",
+      "stock": 15
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "name": "siyana abid",
+      "email": "siyanaabid@gmail.com",
+      "password": "siyana123",
+      "role": "user",
+      "id": "bESrBzbcp_E"
+    },
+    {
+      "name": "fathima",
+      "email": "fathima@gmail.com",
+      "password": "fathima123",
+      "role": "user",
+      "id": "3JOmG_Mqg_E"
+    },
+    {
+      "name": "shaniya",
+      "email": "shaniya@gmail.com",
+      "password": "shaniya123",
+      "role": "user",
+      "id": "T15AEpQTkTE"
+    }
+  ],
+  "orders": [],
+  "carts": [
+    {
+      "userId": "T15AEpQTkTE",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "stock": 15,
+          "quantity": 2
+        },
+        {
+          "productId": "4",
+          "name": "Classic White Shoes",
+          "price": 2200,
+          "image": "https://i.pinimg.com/1200x/f1/64/90/f164903de8fded58017c443355c97ec0.jpg",
+          "stock": 15,
+          "quantity": 1
+        },
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "price": 4500,
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "stock": 15,
+          "quantity": 1
+        }
+      ],
+      "id": "8-160E0s67I"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
