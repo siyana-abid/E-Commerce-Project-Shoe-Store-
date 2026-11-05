@@ -56,7 +56,7 @@ function Register() {
         </h1>
 
         <p className="text-center text-[rgba(59,42,34,0.6)] mb-8">
-          Join SOLESTYLE and find your perfect pair.
+          Join TREDORA and find your perfect pair.
         </p>
 
         <label className="block text-[rgb(59,42,34)] font-medium mb-2">

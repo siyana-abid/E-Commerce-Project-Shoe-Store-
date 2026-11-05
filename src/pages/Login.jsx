@@ -48,7 +48,6 @@ function Login() {
 
     } catch (error) {
       alert("Login failed");
-      console.log(error);
     }
   };
 
@@ -112,10 +111,10 @@ function Login() {
         </p>
 
         <Link
-          to="/"
+          to="/login"
           className="block text-center text-sm text-[rgba(59,42,34,0.6)] mt-5 hover:underline"
         >
-          ← Back to Home
+          Login Page
         </Link>
 
       </form>

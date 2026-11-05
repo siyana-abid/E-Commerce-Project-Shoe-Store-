@@ -1,8 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children, role, redirectTo = "/login" }) {
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   // User login cheythittillenkil
   if (!user) {
@@ -22,4 +21,4 @@ function ProtectedRoute({ children, role, redirectTo = "/login" }) {
   return children;
 }
 
-export default ProtectedRoute;  
+export default ProtectedRoute;

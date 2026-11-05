@@ -11,12 +11,14 @@
     "server": "json-server db.json --port 3000"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.14.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "latest",
     "axios": "^1.21.0",
     "json-server": "^1.0.0-beta.15",
     "react": "latest",
     "react-dom": "latest",
+    "react-redux": "^9.3.1",
     "react-router-dom": "^7.18.5",
     "tailwindcss": "^4.3.3",
     "vite": "latest"

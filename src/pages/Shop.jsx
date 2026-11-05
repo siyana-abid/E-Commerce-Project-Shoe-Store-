@@ -1,68 +1,31 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import { getProducts } from "../services/productService";
-import { getUserCart } from "../services/cartService";
 import ProductCard from "../components/ProductCard";
 
 function Shop() {
-
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("default");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
-  useEffect(() => {
-  console.log("SHOP MOUNTED");
 
-  return () => {
-    console.log("SHOP UNMOUNTED");
-  };
-}, []);
-  // Cart count state
-  const [cartCount, setCartCount] = useState(0);
+  // Get cart items from Redux
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // Calculate total cart quantity
+  const cartCount = cartItems.reduce(
+    (total, item) => total + Number(item.quantity || 0),
+    0
+  );
 
   // View More state
   const [visibleCount, setVisibleCount] = useState(12);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  // Fetch cart count
-  useEffect(() => {
-    const fetchCartCount = async () => {
-      try {
-        if (!user?.id) {
-          setCartCount(0);
-          return;
-        }
-
-        const cart = await getUserCart(user.id);
-
-        if (cart && cart.items) {
-          const totalQuantity = cart.items.reduce(
-            (total, item) => total + Number(item.quantity || 0),
-            0
-          );
-
-          setCartCount(totalQuantity);
-        } else {
-          setCartCount(0);
-        }
-      } catch (error) {
-        console.log("Failed to fetch cart count:", error);
-      }
-    };
-
-    fetchCartCount();
-
-    window.addEventListener("focus", fetchCartCount);
-
-    return () => {
-      window.removeEventListener("focus", fetchCartCount);
-    };
-  }, [user?.id]);
 
   // Fetch products from JSON Server
   useEffect(() => {
@@ -81,7 +44,6 @@ function Shop() {
         setProducts(uniqueProducts);
       } catch (error) {
         setError("Failed to load products");
-        console.log(error);
       } finally {
         setLoading(false);
       }

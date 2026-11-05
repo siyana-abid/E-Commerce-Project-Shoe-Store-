@@ -40,7 +40,6 @@ function ProductDetails() {
 
         setProduct(response.data);
       } catch (error) {
-        console.log(error);
         setError("Product not found!");
       } finally {
         setLoading(false);
@@ -73,7 +72,6 @@ function ProductDetails() {
         setCartCount(0);
       }
     } catch (error) {
-      console.error("Cart count loading error:", error);
     }
   };
 
@@ -123,7 +121,6 @@ function ProductDetails() {
       setCartCount(total);
       setAdded(true);
     } catch (error) {
-      console.error("Add to cart error:", error);
       alert("Unable to add product to cart!");
     } finally {
       setCartLoading(false);

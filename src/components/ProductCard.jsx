@@ -1,10 +1,14 @@
 
-import { useState} from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import { addToCart } from "../services/cartService";
+import { setCartItems } from "../redux/cartSlice";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const wishlistKey = user ? `wishlist_${user.id}` : null;
@@ -25,41 +29,34 @@ function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  
-
-
   // Add to Cart
   const handleAddToCart = async () => {
-    console.trace("WHO TRIGGERED BASKET CLICK");
-      console.log("BASKET CLICKED:", product.id);
     const currentUser = JSON.parse(
       localStorage.getItem("user") || "null"
     );
 
     if (!currentUser) {
-          console.log("USER NOT LOGGED IN");
-
       alert("Please login to add products to your cart!");
       navigate("/login");
-      console.log("PRODUCT CARD RENDER:", product.id, added);
       return;
     }
 
     try {
       setLoading(true);
-       console.log("ADDING TO CART...");
 
-      await addToCart(currentUser.id, product);
-    console.log("CART API SUCCESS");
+      // Add product to JSON Server cart
+      const updatedCart = await addToCart(
+        currentUser.id,
+        product
+      );
+
+      // Update Redux with latest cart items
+      dispatch(setCartItems(updatedCart.items || []));
+      console.log("REDUX CART UPDATED:", updatedCart.items);
 
       setAdded(true);
-          console.log("ADDED STATE UPDATED");
-
     } catch (error) {
-      console.error("Add to cart error:", error);
-          console.error("ADD TO CART FAILED:", error);
-
-      alert("Unable to add product to cart!");
+      alert(error.message || "Unable to add product to cart!");
     } finally {
       setLoading(false);
     }

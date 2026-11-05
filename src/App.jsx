@@ -3,35 +3,58 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 
-import LandingPage from "./pages/LandingPage";
+import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import Shop from "./pages/Shop";
-import FeaturePage from "./pages/FeaturePage";
-import ProductDetails from "./pages/ProductDetails";
 
+import Wishlist from "./pages/Wishlist";
+import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
+import CartList from "./pages/CartList";
+
+import ProductDetails from "./pages/ProductDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+function RootRedirect() {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  if (!user) {
+    return <Navigate to="/register" replace />;
+  }
+
+  if (user.role === "admin") {
+    return <Navigate to="/admin" replace />;
+  }
+
+  return <Navigate to="/home" replace />;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Main Landing Page */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<RootRedirect />} />
 
-        {/* Authentication */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Public Shop */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute role="user">
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/shop" element={<Shop />} />
 
-        {/* Admin Dashboard */}
         <Route
           path="/admin"
           element={
@@ -41,12 +64,11 @@ function App() {
           }
         />
 
-        {/* Protected User Features */}
         <Route
           path="/cart"
           element={
-            <ProtectedRoute role="user" redirectTo="/register">
-              <FeaturePage />
+            <ProtectedRoute role="user" redirectTo="/login">
+              <CartList />
             </ProtectedRoute>
           }
         />
@@ -54,8 +76,8 @@ function App() {
         <Route
           path="/wishlist"
           element={
-            <ProtectedRoute role="user" redirectTo="/register">
-              <FeaturePage />
+            <ProtectedRoute role="user" redirectTo="/login">
+              <Wishlist />
             </ProtectedRoute>
           }
         />
@@ -63,19 +85,26 @@ function App() {
         <Route
           path="/orders"
           element={
-            <ProtectedRoute role="user" redirectTo="/register">
-              <FeaturePage />
+            <ProtectedRoute role="user" redirectTo="/login">
+              <Orders />
             </ProtectedRoute>
           }
         />
 
-        {/* Product Details */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute role="user" redirectTo="/login">
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/product/:id"
           element={<ProductDetails />}
         />
 
-        {/* Unknown URL */}
         <Route
           path="*"
           element={<Navigate to="/" replace />}
