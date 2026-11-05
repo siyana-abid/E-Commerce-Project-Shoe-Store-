@@ -5,7 +5,12 @@ const API_URL = "http://localhost:3000/carts";
 
 // Get a particular user's cart
 export const getUserCart = async (userId) => {
-  const response = await axios.get(`${API_URL}?userId=${userId}`);
+  const response = await axios.get(API_URL, {
+    params: {
+      userId,
+    },
+  });
+
   return response.data[0] || null;
 };
 
@@ -34,12 +39,25 @@ export const addToCart = async (userId, product) => {
   let updatedItems;
 
   if (existingItem) {
+    const stock = Number(existingItem.stock || 0);
+
+    if (existingItem.quantity >= stock) {
+      throw new Error("Maximum available stock reached!");
+    }
+
     updatedItems = cart.items.map((item) =>
       item.productId === product.id
-        ? { ...item, quantity: item.quantity + 1 }
+        ? {
+            ...item,
+            quantity: item.quantity + 1,
+          }
         : item
     );
   } else {
+    if (Number(product.stock || 0) < 1) {
+      throw new Error("This product is out of stock!");
+    }
+
     updatedItems = [
       ...cart.items,
       {
@@ -53,27 +71,29 @@ export const addToCart = async (userId, product) => {
     ];
   }
 
-  const response = await axios.patch(`${API_URL}/${cart.id}`, {
-    items: updatedItems,
-  });
+  const response = await axios.patch(
+    `${API_URL}/${cart.id}`,
+    {
+      items: updatedItems,
+    }
+  );
 
   return response.data;
 };
 
-// Update product quantity
+// Update cart items
 export const updateCart = async (cartId, items) => {
-  const response = await axios.patch(`${API_URL}/${cartId}`, {
-    items,
-  });
+  const response = await axios.patch(
+    `${API_URL}/${cartId}`,
+    {
+      items,
+    }
+  );
 
   return response.data;
 };
 
-// Remove product from cart
+// Remove cart item
 export const removeCartItem = async (cartId, items) => {
-  const response = await axios.patch(`${API_URL}/${cartId}`, {
-    items,
-  });
-
-  return response.data;
+  return updateCart(cartId, items);
 };

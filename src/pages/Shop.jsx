@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getProducts } from "../services/productService";
+import { getUserCart } from "../services/cartService";
 import ProductCard from "../components/ProductCard";
 
 function Shop() {
-  const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
@@ -13,14 +13,56 @@ function Shop() {
   const [sort, setSort] = useState("default");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+  useEffect(() => {
+  console.log("SHOP MOUNTED");
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/");
-    window.location.reload();
+  return () => {
+    console.log("SHOP UNMOUNTED");
   };
+}, []);
+  // Cart count state
+  const [cartCount, setCartCount] = useState(0);
+
+  // View More state
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  // Fetch cart count
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      try {
+        if (!user?.id) {
+          setCartCount(0);
+          return;
+        }
+
+        const cart = await getUserCart(user.id);
+
+        if (cart && cart.items) {
+          const totalQuantity = cart.items.reduce(
+            (total, item) => total + Number(item.quantity || 0),
+            0
+          );
+
+          setCartCount(totalQuantity);
+        } else {
+          setCartCount(0);
+        }
+      } catch (error) {
+        console.log("Failed to fetch cart count:", error);
+      }
+    };
+
+    fetchCartCount();
+
+    window.addEventListener("focus", fetchCartCount);
+
+    return () => {
+      window.removeEventListener("focus", fetchCartCount);
+    };
+  }, [user?.id]);
 
   // Fetch products from JSON Server
   useEffect(() => {
@@ -92,6 +134,30 @@ function Shop() {
     );
   }
 
+  // Show next 12 products
+  const handleViewMore = () => {
+    setVisibleCount((previousCount) => previousCount + 12);
+  };
+
+  // Reset visible products when filters change
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    setVisibleCount(12);
+  };
+
+  const handleCategoryChange = (value) => {
+    setCategory(value);
+    setVisibleCount(12);
+  };
+
+  const handleSortChange = (value) => {
+    setSort(value);
+    setVisibleCount(12);
+  };
+
+  // Products to display
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[rgb(245,241,232)] flex items-center justify-center">
@@ -122,13 +188,55 @@ function Shop() {
           TREDORA
         </Link>
 
-        <div className="flex gap-5 items-center">
+        <div className="flex gap-5 items-center text-sm md:text-base">
 
-          <Link to="/home" className="hover:opacity-60">
+          <Link to="/" className="font-semibold hover:opacity-60">
             Home
           </Link>
 
-          {!user ? (
+          {user && (
+            <>
+              <Link to="/wishlist" className="hover:opacity-60">
+                Wishlist
+              </Link>
+
+              <Link to="/orders" className="hover:opacity-60">
+                Orders
+              </Link>
+
+              {/* Cart Icon */}
+              <Link
+                to="/cart"
+                className="relative hover:opacity-60"
+                aria-label={`Cart with ${cartCount} items`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+
+                {/* Cart Count Badge */}
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </>
+          )}
+
+          {!user && (
             <>
               <Link
                 to="/login"
@@ -144,13 +252,6 @@ function Shop() {
                 Register
               </Link>
             </>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] px-5 py-2 rounded-full text-sm hover:bg-[rgb(81,57,46)] transition"
-            >
-              Logout
-            </button>
           )}
 
         </div>
@@ -184,13 +285,13 @@ function Shop() {
             type="text"
             placeholder="Search your favourite shoes..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="w-full py-3 outline-none bg-transparent text-[rgb(59,42,34)] placeholder:text-[rgba(59,42,34,0.5)]"
           />
 
           {search && (
             <button
-              onClick={() => setSearch("")}
+              onClick={() => handleSearchChange("")}
               className="text-sm font-semibold"
             >
               Clear
@@ -211,7 +312,7 @@ function Shop() {
 
           <select
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => handleCategoryChange(e.target.value)}
             className="w-full p-3 rounded-xl bg-white border border-[rgba(59,42,34,0.2)] outline-none"
           >
             {categories.map((item) => (
@@ -230,7 +331,7 @@ function Shop() {
 
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) => handleSortChange(e.target.value)}
             className="w-full p-3 rounded-xl bg-white border border-[rgba(59,42,34,0.2)] outline-none"
           >
             <option value="default">Default</option>
@@ -259,8 +360,8 @@ function Shop() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((item) => (
+          {visibleProducts.length > 0 ? (
+            visibleProducts.map((item) => (
               <ProductCard
                 key={item.id}
                 product={item}
@@ -273,6 +374,20 @@ function Shop() {
           )}
 
         </div>
+
+        {/* View More Button */}
+        {visibleCount < filteredProducts.length && (
+          <div className="flex justify-center mt-12">
+
+            <button
+              onClick={handleViewMore}
+              className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] px-10 py-3 rounded-full font-semibold hover:bg-[rgb(81,57,46)] transition"
+            >
+              View More
+            </button>
+
+          </div>
+        )}
 
       </section>
 

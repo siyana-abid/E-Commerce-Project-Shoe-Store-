@@ -1,10 +1,50 @@
 
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getUserCart } from "../services/cartService";
 
 function LandingPage() {
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  const [cartCount, setCartCount] = useState(0);
+
+  // Fetch cart count
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      try {
+        if (!user?.id) {
+          setCartCount(0);
+          return;
+        }
+
+        const cart = await getUserCart(user.id);
+
+        if (cart && cart.items) {
+          const totalQuantity = cart.items.reduce(
+            (total, item) => total + Number(item.quantity || 0),
+            0
+          );
+
+          setCartCount(totalQuantity);
+        } else {
+          setCartCount(0);
+        }
+      } catch (error) {
+        console.log("Failed to fetch cart count:", error);
+      }
+    };
+
+    fetchCartCount();
+
+    // Refresh count when returning to the page
+    window.addEventListener("focus", fetchCartCount);
+
+    return () => {
+      window.removeEventListener("focus", fetchCartCount);
+    };
+  }, [user?.id]);
 
   const handleFeatureClick = (path) => {
     if (!user) {
@@ -31,9 +71,10 @@ function LandingPage() {
         </h1>
 
         <div className="hidden md:flex items-center gap-8 font-medium">
-         <Link to="/home" className="hover:opacity-60">
-  Home
-</Link>
+
+          <Link to="/" className="hover:opacity-60">
+            Home
+          </Link>
 
           <Link to="/shop" className="hover:opacity-60">
             Shop
@@ -47,11 +88,42 @@ function LandingPage() {
           </button>
 
           <button
-            onClick={() => handleFeatureClick("/cart")}
+            onClick={() => handleFeatureClick("/orders")}
             className="hover:opacity-60"
           >
-            Cart
+            Orders
           </button>
+
+          {/* Cart Icon */}
+          <button
+            onClick={() => handleFeatureClick("/cart")}
+            className="relative hover:opacity-60"
+            aria-label={`Cart with ${cartCount} items`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="27"
+              height="27"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+
+            {/* Cart Count */}
+            {user && cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
         </div>
 
         {/* Login / Register / Logout */}

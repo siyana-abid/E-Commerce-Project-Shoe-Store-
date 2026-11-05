@@ -2,7 +2,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { addToCart } from "../services/cartService";
+
+import {
+  addToCart,
+  getUserCart,
+} from "../services/cartService";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -11,21 +15,30 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [added, setAdded] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  // Get logged-in user
+  const getUser = () => {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  };
 
   // Fetch product
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setError("");
+        setProduct(null);
+        setAdded(false);
 
         const response = await axios.get(
           `http://localhost:3000/products/${id}`
         );
 
         setProduct(response.data);
-        setAdded(false);
       } catch (error) {
         console.log(error);
         setError("Product not found!");
@@ -37,11 +50,52 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
+  // Fetch cart count
+  const fetchCartCount = async () => {
+    const user = getUser();
+
+    if (!user) {
+      setCartCount(0);
+      return;
+    }
+
+    try {
+      const cart = await getUserCart(user.id);
+
+      if (cart && cart.items) {
+        const total = cart.items.reduce(
+          (sum, item) => sum + Number(item.quantity || 0),
+          0
+        );
+
+        setCartCount(total);
+      } else {
+        setCartCount(0);
+      }
+    } catch (error) {
+      console.error("Cart count loading error:", error);
+    }
+  };
+
+  // Load cart count when page opens
+  useEffect(() => {
+    fetchCartCount();
+
+    // Refresh cart count when user returns to this tab
+    const handleFocus = () => {
+      fetchCartCount();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+
   // Add to Cart
   const handleAddToCart = async () => {
-    const user = JSON.parse(
-      localStorage.getItem("user") || "null"
-    );
+    const user = getUser();
 
     if (!user) {
       alert("Please login to add products to your cart!");
@@ -57,11 +111,17 @@ function ProductDetails() {
     try {
       setCartLoading(true);
 
-      await addToCart(user.id, product);
+      // Add product to JSON Server cart
+      const updatedCart = await addToCart(user.id, product);
 
-      // Keep success state until another product is opened
+      // Update badge immediately using updated cart data
+      const total = updatedCart.items.reduce(
+        (sum, item) => sum + Number(item.quantity || 0),
+        0
+      );
+
+      setCartCount(total);
       setAdded(true);
-
     } catch (error) {
       console.error("Add to cart error:", error);
       alert("Unable to add product to cart!");
@@ -70,6 +130,7 @@ function ProductDetails() {
     }
   };
 
+  // Loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[rgb(245,241,232)]">
@@ -80,6 +141,7 @@ function ProductDetails() {
     );
   }
 
+  // Error / Product not found
   if (error || !product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(245,241,232)]">
@@ -104,13 +166,45 @@ function ProductDetails() {
           TREDORA
         </Link>
 
-        <Link
-          to="/shop"
-          className="font-semibold hover:opacity-60"
-        >
-          Back to Shop
-        </Link>
+        <div className="flex items-center gap-5">
 
+          {/* Cart Icon with Quantity Badge */}
+          <Link
+            to="/cart"
+            className="relative hover:opacity-60"
+            aria-label={`Cart with ${cartCount} items`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            to="/shop"
+            className="font-semibold hover:opacity-60"
+          >
+            Back to Shop
+          </Link>
+
+        </div>
       </nav>
 
       {/* Product Details */}
@@ -148,6 +242,7 @@ function ProductDetails() {
               ₹{product.price}
             </p>
 
+            {/* Description */}
             <div className="border-t border-[rgba(59,42,34,0.2)] py-6">
 
               <h3 className="font-bold text-lg mb-2">
@@ -155,21 +250,26 @@ function ProductDetails() {
               </h3>
 
               <p className="text-[rgba(59,42,34,0.7)] leading-7">
-                {product.description || "No description available for this product."}
+                {product.description ||
+                  "No description available for this product."}
               </p>
 
             </div>
 
+            {/* Category */}
             <div className="flex justify-between border-t border-b border-[rgba(59,42,34,0.2)] py-5 mb-8">
 
               <span className="font-semibold">
                 Category
               </span>
 
-              <span>{product.category || "Not available"}</span>
+              <span>
+                {product.category || "Not available"}
+              </span>
 
             </div>
 
+            {/* Stock */}
             <div className="flex justify-between mb-8">
 
               <span className="font-semibold">
@@ -186,7 +286,10 @@ function ProductDetails() {
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={Number(product.stock ?? 0) <= 0 || cartLoading}
+              disabled={
+                Number(product.stock ?? 0) <= 0 ||
+                cartLoading
+              }
               className="w-full bg-[rgb(59,42,34)] text-[rgb(245,241,232)] py-4 rounded-full font-semibold hover:bg-[rgb(81,57,46)] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {Number(product.stock ?? 0) <= 0

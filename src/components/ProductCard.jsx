@@ -1,42 +1,64 @@
 
-import { useState } from "react";
+import { useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { addToCart } from "../services/cartService";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const wishlistKey = user ? `wishlist_${user.id}` : null;
+
   const [isWishlisted, setIsWishlisted] = useState(() => {
+    if (!wishlistKey) return false;
+
     const wishlist = JSON.parse(
-      localStorage.getItem("wishlist") || "[]"
+      localStorage.getItem(wishlistKey) || "[]"
     );
 
-    return wishlist.some((item) => item.id === product.id);
+    return wishlist.some(
+      (item) => String(item.id) === String(product.id)
+    );
   });
 
   const [added, setAdded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  
+
+
   // Add to Cart
   const handleAddToCart = async () => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    console.trace("WHO TRIGGERED BASKET CLICK");
+      console.log("BASKET CLICKED:", product.id);
+    const currentUser = JSON.parse(
+      localStorage.getItem("user") || "null"
+    );
 
-    if (!user) {
+    if (!currentUser) {
+          console.log("USER NOT LOGGED IN");
+
       alert("Please login to add products to your cart!");
       navigate("/login");
+      console.log("PRODUCT CARD RENDER:", product.id, added);
       return;
     }
 
     try {
       setLoading(true);
+       console.log("ADDING TO CART...");
 
-      await addToCart(user.id, product);
+      await addToCart(currentUser.id, product);
+    console.log("CART API SUCCESS");
 
       setAdded(true);
-      alert("Product added to cart!");
+          console.log("ADDED STATE UPDATED");
+
     } catch (error) {
       console.error("Add to cart error:", error);
+          console.error("ADD TO CART FAILED:", error);
+
       alert("Unable to add product to cart!");
     } finally {
       setLoading(false);
@@ -45,20 +67,36 @@ function ProductCard({ product }) {
 
   // Wishlist
   const handleWishlist = () => {
-    let wishlist = JSON.parse(
-      localStorage.getItem("wishlist") || "[]"
+    const currentUser = JSON.parse(
+      localStorage.getItem("user") || "null"
     );
 
-    if (isWishlisted) {
+    if (!currentUser) {
+      alert("Please login to use your wishlist!");
+      navigate("/login");
+      return;
+    }
+
+    const key = `wishlist_${currentUser.id}`;
+
+    let wishlist = JSON.parse(
+      localStorage.getItem(key) || "[]"
+    );
+
+    const alreadyExists = wishlist.some(
+      (item) => String(item.id) === String(product.id)
+    );
+
+    if (alreadyExists) {
       wishlist = wishlist.filter(
-        (item) => item.id !== product.id
+        (item) => String(item.id) !== String(product.id)
       );
     } else {
       wishlist.push(product);
     }
 
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    setIsWishlisted(!isWishlisted);
+    localStorage.setItem(key, JSON.stringify(wishlist));
+    setIsWishlisted(!alreadyExists);
   };
 
   return (
@@ -80,6 +118,7 @@ function ProductCard({ product }) {
         )}
 
         <button
+          type="button"
           onClick={handleWishlist}
           aria-label="Toggle wishlist"
           className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white text-[rgb(59,42,34)] shadow-md flex items-center justify-center text-2xl hover:scale-110 transition"
@@ -109,6 +148,7 @@ function ProductCard({ product }) {
           </p>
 
           <button
+            type="button"
             onClick={handleAddToCart}
             disabled={loading}
             aria-label="Add to cart"

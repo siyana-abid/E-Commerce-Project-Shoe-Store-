@@ -533,12 +533,150 @@
       "password": "shaniya123",
       "role": "user",
       "id": "T15AEpQTkTE"
+    },
+    {
+      "name": "rukiyanusha",
+      "email": "rukiyanusha@gmail.com",
+      "password": "rukiyanusha123",
+      "role": "user",
+      "id": "1VlIYakG2gQ"
+    },
+    {
+      "name": "nusha",
+      "email": "nusha@gmail.com",
+      "password": "nusha123",
+      "role": "user",
+      "id": "IFGnOkTA9vM"
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "userId": "T15AEpQTkTE",
+      "userName": "shaniya",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "price": 5200,
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 5200,
+      "orderDate": "2026-11-04T05:45:41.667Z",
+      "status": "Confirmed",
+      "id": "5RF5z8Y-Xgw"
+    },
+    {
+      "userId": "T15AEpQTkTE",
+      "userName": "shaniya",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "price": 4500,
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 4500,
+      "orderDate": "2026-11-04T05:47:07.690Z",
+      "status": "Confirmed",
+      "id": "E-Jb4KwKZuA"
+    },
+    {
+      "userId": "IFGnOkTA9vM",
+      "userName": "nusha",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "price": 4500,
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 4500,
+      "orderDate": "2026-11-04T06:43:30.101Z",
+      "status": "Confirmed",
+      "id": "Ar2AP6i1CNM"
+    },
+    {
+      "userId": "IFGnOkTA9vM",
+      "userName": "nusha",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "price": 5200,
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 5200,
+      "orderDate": "2026-11-04T11:38:30.504Z",
+      "status": "Confirmed",
+      "id": "PU-9xCKUhNE"
+    },
+    {
+      "userId": "IFGnOkTA9vM",
+      "userName": "nusha",
+      "items": [
+        {
+          "productId": "38",
+          "name": "Classic Lace-up Boots",
+          "image": "https://i.pinimg.com/1200x/1f/fc/40/1ffc40a67842529986bccd31f8e95107.jpg",
+          "price": 5700,
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 5700,
+      "orderDate": "2026-11-04T11:56:49.108Z",
+      "status": "Confirmed",
+      "id": "kXTxsqE8QLw"
+    }
+  ],
   "carts": [
     {
       "userId": "T15AEpQTkTE",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "price": 4500,
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "stock": 15,
+          "quantity": 2
+        }
+      ],
+      "id": "8-160E0s67I"
+    },
+    {
+      "userId": "bESrBzbcp_E",
+      "items": [
+        {
+          "productId": "20",
+          "name": "Sport Flex Shoes",
+          "price": 3900,
+          "image": "https://i.pinimg.com/1200x/e8/70/b8/e870b8772ddb7d28072464909b3dd6a4.jpg",
+          "stock": 15,
+          "quantity": 1
+        }
+      ],
+      "id": "L7Yu9OZNUH4"
+    },
+    {
+      "userId": "1VlIYakG2gQ",
+      "items": [],
+      "id": "-_KSkSBiqOI"
+    },
+    {
+      "userId": "IFGnOkTA9vM",
       "items": [
         {
           "productId": "2",
@@ -546,26 +684,10 @@
           "price": 5200,
           "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
           "stock": 15,
-          "quantity": 2
-        },
-        {
-          "productId": "4",
-          "name": "Classic White Shoes",
-          "price": 2200,
-          "image": "https://i.pinimg.com/1200x/f1/64/90/f164903de8fded58017c443355c97ec0.jpg",
-          "stock": 15,
-          "quantity": 1
-        },
-        {
-          "productId": "1",
-          "name": "Nike Air Max",
-          "price": 4500,
-          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
-          "stock": 15,
-          "quantity": 1
+          "quantity": 7
         }
       ],
-      "id": "8-160E0s67I"
+      "id": "geYDZ0RiaWw"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

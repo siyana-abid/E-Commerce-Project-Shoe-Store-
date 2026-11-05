@@ -9,7 +9,6 @@ import {
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import Shop from "./pages/Shop";
 import FeaturePage from "./pages/FeaturePage";
@@ -22,25 +21,15 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Public Home Page */}
+        {/* Main Landing Page */}
         <Route path="/" element={<LandingPage />} />
 
         {/* Authentication */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Public Shop Page */}
+        {/* Public Shop */}
         <Route path="/shop" element={<Shop />} />
-
-        {/* User Home */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute role="user">
-              <Home />
-            </ProtectedRoute>
-          }
-        />
 
         {/* Admin Dashboard */}
         <Route
@@ -80,16 +69,17 @@ function App() {
           }
         />
 
+        {/* Product Details */}
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
+
         {/* Unknown URL */}
         <Route
           path="*"
           element={<Navigate to="/" replace />}
         />
-
-        <Route
-  path="/product/:id"
-  element={<ProductDetails />}
-/>
 
       </Routes>
     </BrowserRouter>
