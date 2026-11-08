@@ -111,7 +111,6 @@ function Wishlist() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/home" className="brand-name text-2xl">
@@ -136,7 +135,6 @@ function Wishlist() {
             Orders
           </Link>
 
-          {/* Cart Icon */}
           <Link
             to="/cart"
             className="relative hover:opacity-60"
@@ -168,7 +166,6 @@ function Wishlist() {
         </div>
       </nav>
 
-      {/* Heading */}
       <section className="text-center pt-12 pb-10 px-5">
 
         <p className="uppercase tracking-[3px] text-sm mb-3">
@@ -181,7 +178,6 @@ function Wishlist() {
 
       </section>
 
-      {/* Wishlist Content */}
       <main className="flex-1">
 
         <section className="max-w-6xl mx-auto px-5 pb-16">
@@ -224,7 +220,6 @@ function Wishlist() {
                   className="bg-white rounded-3xl p-4 shadow-sm hover:shadow-lg transition"
                 >
 
-                  {/* Product Image */}
                   <div className="h-56 bg-[rgb(245,241,232)] rounded-2xl p-4 flex items-center justify-center">
 
                     {item.image ? (
@@ -239,7 +234,6 @@ function Wishlist() {
 
                   </div>
 
-                  {/* Product Details */}
                   <div className="pt-5">
 
                     <p className="text-xs uppercase tracking-widest text-gray-500">
@@ -254,7 +248,6 @@ function Wishlist() {
                       ₹{item.price}
                     </p>
 
-                    {/* Add to Cart */}
                     <button
                       type="button"
                       disabled={isUpdating}
@@ -264,7 +257,6 @@ function Wishlist() {
                       {isUpdating ? "Adding..." : "Add to Cart"}
                     </button>
 
-                    {/* Remove Wishlist */}
                     <button
                       type="button"
                       disabled={isUpdating}
@@ -288,7 +280,6 @@ function Wishlist() {
 
       </main>
 
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">

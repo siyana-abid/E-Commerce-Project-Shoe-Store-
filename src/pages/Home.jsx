@@ -61,7 +61,6 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#38251C]">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-5 bg-[#FAF7F2] border-b border-[#38251C]/10">
 
         <Link to="/home" className="text-3xl font-bold tracking-tight">
@@ -147,7 +146,6 @@ function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="grid md:grid-cols-2 items-center gap-8 px-6 md:px-16 py-14 md:py-20">
 
         <div>
@@ -187,7 +185,6 @@ function Home() {
 
       </section>
 
-      {/* New Collection */}
       <section className="px-6 md:px-16 py-12 bg-white">
 
         <div className="text-center mb-10">
@@ -270,7 +267,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Offer Banner */}
       <section className="px-6 md:px-16 py-12">
 
         <div className="bg-[#67432F] rounded-2xl px-8 md:px-14 py-10 text-white flex flex-col md:flex-row items-center justify-between gap-6">
@@ -299,7 +295,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
       <section className="px-6 md:px-16 py-12 bg-white">
 
         <h2 className="text-3xl font-bold text-center mb-10">
@@ -343,7 +338,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Shopping Links */}
       <section className="px-6 md:px-16 py-12">
 
         <h2 className="text-3xl font-bold text-center mb-8">
@@ -388,7 +382,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-[#38251C] text-[#FAF7F2] px-6 md:px-16 py-10">
 
         <div className="grid md:grid-cols-3 gap-8">

@@ -69,7 +69,6 @@ function Orders() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/home" className="brand-name text-2xl">
@@ -94,7 +93,6 @@ function Orders() {
             Orders
           </Link>
 
-          {/* Cart Icon */}
           <Link
             to="/cart"
             className="relative hover:opacity-60"
@@ -126,7 +124,6 @@ function Orders() {
         </div>
       </nav>
 
-      {/* Heading */}
       <section className="text-center pt-12 pb-10 px-5">
 
         <p className="uppercase tracking-[3px] text-sm mb-3">
@@ -139,7 +136,6 @@ function Orders() {
 
       </section>
 
-      {/* Orders Content */}
       <main className="flex-1">
 
         <section className="max-w-5xl mx-auto px-5 pb-16">
@@ -205,7 +201,6 @@ function Orders() {
                   className="bg-white rounded-3xl p-6 md:p-8 shadow-sm"
                 >
 
-                  {/* Order Header */}
                   <div className="flex flex-col sm:flex-row justify-between gap-3 border-b border-gray-200 pb-5 mb-5">
 
                     <div>
@@ -234,7 +229,6 @@ function Orders() {
 
                   </div>
 
-                  {/* Ordered Products */}
                   <div className="space-y-5">
 
                     {order.items?.map((item, index) => (
@@ -290,7 +284,6 @@ function Orders() {
 
                   </div>
 
-                  {/* Delivery Address */}
                   {order.shippingAddress && (
 
                     <div className="border-t border-gray-200 mt-6 pt-5">
@@ -321,7 +314,6 @@ function Orders() {
 
                   )}
 
-                  {/* Order Total */}
                   <div className="border-t border-gray-200 mt-6 pt-5 flex justify-between font-bold">
 
                     <span>
@@ -347,7 +339,6 @@ function Orders() {
 
       </main>
 
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">

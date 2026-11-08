@@ -247,7 +247,6 @@ function Checkout() {
         </div>
       </nav>
 
-      {/* Page Heading */}
       <section className="text-center pt-12 pb-10 px-5">
 
         <p className="uppercase tracking-[3px] text-sm mb-3">
@@ -264,7 +263,6 @@ function Checkout() {
 
       </section>
 
-      {/* Checkout Content */}
       <main className="flex-1">
 
         {checkoutItems.length > 0 && (
@@ -276,7 +274,6 @@ function Checkout() {
               className="grid grid-cols-1 lg:grid-cols-3 gap-8"
             >
 
-              {/* Delivery Address Form */}
               <div className="lg:col-span-2 bg-white rounded-3xl p-6 md:p-9 shadow-sm">
 
                 <h2 className="text-2xl font-bold mb-2">
@@ -289,7 +286,6 @@ function Checkout() {
 
                 <div className="space-y-5">
 
-                  {/* Full Name */}
                   <div>
                     <label className="block font-semibold mb-2">
                       Full Name
@@ -306,7 +302,6 @@ function Checkout() {
                     />
                   </div>
 
-                  {/* Phone */}
                   <div>
                     <label className="block font-semibold mb-2">
                       Phone Number
@@ -329,7 +324,6 @@ function Checkout() {
                     </p>
                   </div>
 
-                  {/* Address */}
                   <div>
                     <label className="block font-semibold mb-2">
                       House Name / Street Address
@@ -346,7 +340,6 @@ function Checkout() {
                     />
                   </div>
 
-                  {/* City and State */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                     <div>
@@ -383,7 +376,6 @@ function Checkout() {
 
                   </div>
 
-                  {/* Pincode */}
                   <div>
                     <label className="block font-semibold mb-2">
                       Pincode
@@ -406,7 +398,6 @@ function Checkout() {
 
               </div>
 
-              {/* Order Summary */}
               <div className="bg-white rounded-3xl p-6 md:p-7 shadow-sm h-fit">
 
                 <h2 className="text-2xl font-bold mb-6">
@@ -516,7 +507,6 @@ function Checkout() {
 
       </main>
 
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">

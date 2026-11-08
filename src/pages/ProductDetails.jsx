@@ -156,7 +156,6 @@ function ProductDetails() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)]">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/" className="brand-name text-2xl">
@@ -165,7 +164,6 @@ function ProductDetails() {
 
         <div className="flex items-center gap-5">
 
-          {/* Cart Icon with Quantity Badge */}
           <Link
             to="/cart"
             className="relative hover:opacity-60"
@@ -204,7 +202,6 @@ function ProductDetails() {
         </div>
       </nav>
 
-      {/* Product Details */}
       <section className="max-w-6xl mx-auto px-6 py-16">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -224,7 +221,6 @@ function ProductDetails() {
 
           </div>
 
-          {/* Product Information */}
           <div>
 
             <p className="uppercase tracking-[3px] text-sm mb-4 text-[rgba(59,42,34,0.6)]">
@@ -239,7 +235,6 @@ function ProductDetails() {
               ₹{product.price}
             </p>
 
-            {/* Description */}
             <div className="border-t border-[rgba(59,42,34,0.2)] py-6">
 
               <h3 className="font-bold text-lg mb-2">
@@ -253,7 +248,6 @@ function ProductDetails() {
 
             </div>
 
-            {/* Category */}
             <div className="flex justify-between border-t border-b border-[rgba(59,42,34,0.2)] py-5 mb-8">
 
               <span className="font-semibold">
@@ -266,7 +260,6 @@ function ProductDetails() {
 
             </div>
 
-            {/* Stock */}
             <div className="flex justify-between mb-8">
 
               <span className="font-semibold">
@@ -279,7 +272,6 @@ function ProductDetails() {
 
             </div>
 
-            {/* Add to Cart */}
             <button
               type="button"
               onClick={handleAddToCart}
@@ -298,7 +290,6 @@ function ProductDetails() {
                 : "Add to Cart"}
             </button>
 
-            {/* View Cart Link */}
             {added && (
               <Link
                 to="/cart"
@@ -314,7 +305,6 @@ function ProductDetails() {
 
       </section>
 
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">

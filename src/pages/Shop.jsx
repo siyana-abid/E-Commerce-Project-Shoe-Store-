@@ -143,7 +143,6 @@ function Shop() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)]">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/" className="brand-name text-2xl">
@@ -166,7 +165,6 @@ function Shop() {
                 Orders
               </Link>
 
-              {/* Cart Icon */}
               <Link
                 to="/cart"
                 className="relative hover:opacity-60"
@@ -188,7 +186,6 @@ function Shop() {
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                 </svg>
 
-                {/* Cart Count Badge */}
                 {cartCount > 0 && (
                   <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     {cartCount}
@@ -219,7 +216,6 @@ function Shop() {
         </div>
       </nav>
 
-      {/* Heading */}
       <section className="text-center px-5 pt-14 pb-8">
 
         <p className="uppercase tracking-[4px] text-sm mb-3">
@@ -236,7 +232,6 @@ function Shop() {
 
       </section>
 
-      {/* Search */}
       <div className="max-w-xl mx-auto px-5 mb-6">
 
         <div className="flex items-center bg-white rounded-full border border-[rgba(59,42,34,0.2)] px-5 py-2 shadow-sm">
@@ -263,10 +258,8 @@ function Shop() {
         </div>
       </div>
 
-      {/* Category and Sort */}
       <div className="max-w-5xl mx-auto px-5 mb-12 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-        {/* Category Filter */}
         <div>
           <label className="block font-semibold mb-2">
             Filter by Category
@@ -285,7 +278,6 @@ function Shop() {
           </select>
         </div>
 
-        {/* Sort */}
         <div>
           <label className="block font-semibold mb-2">
             Sort Products
@@ -305,7 +297,6 @@ function Shop() {
 
       </div>
 
-      {/* Product List */}
       <section className="px-6 md:px-12 pb-16">
 
         <div className="flex justify-between items-center mb-7">
@@ -337,7 +328,6 @@ function Shop() {
 
         </div>
 
-        {/* View More Button */}
         {visibleCount < filteredProducts.length && (
           <div className="flex justify-center mt-12">
 
@@ -352,8 +342,6 @@ function Shop() {
         )}
 
       </section>
-
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">

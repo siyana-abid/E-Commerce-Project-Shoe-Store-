@@ -981,16 +981,7 @@
     },
     {
       "userId": "HXDut79UgaY",
-      "items": [
-        {
-          "productId": "1",
-          "name": "Nike Air Max",
-          "price": 4500,
-          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
-          "stock": 15,
-          "quantity": 2
-        }
-      ],
+      "items": [],
       "id": "anpm7mauicg"
     },
     {

@@ -29,7 +29,6 @@ function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Add to Cart
   const handleAddToCart = async () => {
     const currentUser = JSON.parse(
       localStorage.getItem("user") || "null"
@@ -61,7 +60,6 @@ function ProductCard({ product }) {
     }
   };
 
-  // Wishlist
   const handleWishlist = () => {
     const currentUser = JSON.parse(
       localStorage.getItem("user") || "null"
