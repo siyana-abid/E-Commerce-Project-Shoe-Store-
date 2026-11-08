@@ -109,10 +109,8 @@ function ProductDetails() {
     try {
       setCartLoading(true);
 
-      // Add product to JSON Server cart
       const updatedCart = await addToCart(user.id, product);
 
-      // Update badge immediately using updated cart data
       const total = updatedCart.items.reduce(
         (sum, item) => sum + Number(item.quantity || 0),
         0
@@ -127,7 +125,6 @@ function ProductDetails() {
     }
   };
 
-  // Loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[rgb(245,241,232)]">
@@ -138,7 +135,6 @@ function ProductDetails() {
     );
   }
 
-  // Error / Product not found
   if (error || !product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(245,241,232)]">
