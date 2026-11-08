@@ -79,7 +79,7 @@ function ProductCard({ product }) {
 
     const alreadyExists = wishlist.some(
       (item) => String(item.id) === String(product.id)
-    );
+    );  
 
     if (alreadyExists) {
       wishlist = wishlist.filter(

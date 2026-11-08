@@ -13,27 +13,22 @@ function Shop() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Get cart items from Redux
   const cartItems = useSelector((state) => state.cart.items);
 
-  // Calculate total cart quantity
   const cartCount = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
     0
   );
 
-  // View More state
   const [visibleCount, setVisibleCount] = useState(12);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  // Fetch products from JSON Server
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts();
 
-        // Remove duplicate products using ID
         const uniqueProducts = data.filter(
           (item, index, array) =>
             array.findIndex(
@@ -52,7 +47,6 @@ function Shop() {
     fetchProducts();
   }, []);
 
-  // Get unique categories
   const categories = [
     "All",
     ...new Set(
@@ -62,7 +56,6 @@ function Shop() {
     ),
   ];
 
-  // Search and category filter
   let filteredProducts = products.filter((item) => {
     const matchesSearch = (item.name || "")
       .toLowerCase()
@@ -81,7 +74,7 @@ function Shop() {
     return matchesSearch && matchesCategory;
   });
 
-  // Sorting
+  
   if (sort === "lowToHigh") {
     filteredProducts.sort(
       (a, b) => Number(a.price) - Number(b.price)
@@ -96,12 +89,10 @@ function Shop() {
     );
   }
 
-  // Show next 12 products
   const handleViewMore = () => {
     setVisibleCount((previousCount) => previousCount + 12);
   };
 
-  // Reset visible products when filters change
   const handleSearchChange = (value) => {
     setSearch(value);
     setVisibleCount(12);
@@ -117,7 +108,6 @@ function Shop() {
     setVisibleCount(12);
   };
 
-  // Products to display
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
   if (loading) {

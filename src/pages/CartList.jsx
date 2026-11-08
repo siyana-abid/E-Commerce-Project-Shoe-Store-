@@ -30,7 +30,6 @@ function CartList() {
 
   const cartActionLock = useRef(false);
 
-  // Fetch logged-in user's cart
   useEffect(() => {
     const fetchCart = async () => {
       if (!user) {
@@ -69,7 +68,6 @@ function CartList() {
     fetchCart();
   }, [user?.id, dispatch]);
 
-  // Update cart in JSON Server and Redux
   const saveCartItems = async (updatedItems) => {
     if (cartActionLock.current || !cartRecord) return;
 
@@ -100,7 +98,6 @@ function CartList() {
     }
   };
 
-  // Increase quantity
   const increaseQuantity = async (id) => {
     if (cartActionLock.current) return;
 
@@ -130,7 +127,6 @@ function CartList() {
     await saveCartItems(updatedItems);
   };
 
-  // Decrease quantity
   const decreaseQuantity = async (id) => {
     if (cartActionLock.current) return;
 
@@ -147,7 +143,6 @@ function CartList() {
     await saveCartItems(updatedItems);
   };
 
-  // Remove product from cart
   const removeFromCart = async (id) => {
     if (cartActionLock.current) return;
 
@@ -158,7 +153,6 @@ function CartList() {
     await saveCartItems(updatedItems);
   };
 
-  // Calculate total price
   const totalPrice = cart.reduce(
     (total, item) =>
       total +
@@ -166,7 +160,6 @@ function CartList() {
     0
   );
 
-  // Buy only one product
   const handleBuyNow = (item) => {
     navigate("/checkout", {
       state: {
@@ -176,7 +169,6 @@ function CartList() {
     });
   };
 
-  // Checkout all cart products
   const handleCheckout = () => {
     if (cart.length === 0) {
       alert("Your cart is empty!");

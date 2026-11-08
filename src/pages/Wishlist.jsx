@@ -17,7 +17,6 @@ function Wishlist() {
 
   const wishlistKey = user ? `wishlist_${user.id}` : null;
 
-  // Redux cart items
   const reduxCartItems = useSelector((state) => state.cart.items);
 
   const totalItems = reduxCartItems.reduce(
@@ -25,7 +24,6 @@ function Wishlist() {
     0
   );
 
-  // Wishlist state
   const [wishlist, setWishlist] = useState(() => {
     if (!wishlistKey) return [];
 
@@ -35,7 +33,6 @@ function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Fetch cart for Redux badge
   useEffect(() => {
     const fetchCart = async () => {
       if (!user) {
@@ -63,7 +60,6 @@ function Wishlist() {
     fetchCart();
   }, [user?.id, dispatch]);
 
-  // Save wishlist in localStorage
   useEffect(() => {
     if (wishlistKey) {
       localStorage.setItem(
@@ -73,7 +69,6 @@ function Wishlist() {
     }
   }, [wishlist, wishlistKey]);
 
-  // Remove product from wishlist
   const removeFromWishlist = (id) => {
     setWishlist((previousWishlist) =>
       previousWishlist.filter(
@@ -82,7 +77,6 @@ function Wishlist() {
     );
   };
 
-  // Add wishlist product to cart
   const addWishlistToCart = async (product) => {
     if (!user) {
       alert("Please login to add products to your cart!");
@@ -97,7 +91,6 @@ function Wishlist() {
     try {
       const response = await addToCart(user.id, product);
 
-      // Update Redux after API success
       dispatch(setCartItems(response.items || []));
 
       alert("Product added to cart!");

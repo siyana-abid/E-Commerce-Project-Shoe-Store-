@@ -28,7 +28,6 @@ function Checkout() {
     0
   );
 
-  // Items passed from Cart page
   const checkoutItems = location.state?.items || [];
 
   const checkoutType = location.state?.checkoutType || "cart";
@@ -44,7 +43,6 @@ function Checkout() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  // Redirect if user or checkout items are missing
   useEffect(() => {
     if (!user) {
       navigate("/login", { replace: true });
@@ -56,7 +54,6 @@ function Checkout() {
     }
   }, [user?.id, checkoutItems.length, navigate]);
 
-  // Handle form inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -66,13 +63,11 @@ function Checkout() {
     }));
   };
 
-  // Calculate total items
   const totalItems = checkoutItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
     0
   );
 
-  // Calculate total price
   const totalPrice = checkoutItems.reduce(
     (total, item) =>
       total +
@@ -80,7 +75,6 @@ function Checkout() {
     0
   );
 
-  // Confirm order
   const handleConfirmOrder = async (e) => {
     e.preventDefault();
 
@@ -100,7 +94,6 @@ function Checkout() {
     setSubmitting(true);
 
     try {
-      // Prepare order products
       const orderItems = checkoutItems.map((item) => ({
         productId: item.productId || item.id,
         name: item.name,
@@ -109,7 +102,6 @@ function Checkout() {
         quantity: Number(item.quantity),
       }));
 
-      // Prepare order data
       const orderData = {
         userId: user.id,
         userName: user.name || user.username || formData.fullName,
@@ -128,13 +120,11 @@ function Checkout() {
         status: "Confirmed",
       };
 
-      // Save order in JSON Server
       await axios.post(
         "http://localhost:3000/orders",
         orderData
       );
 
-      // Update cart after order is saved
       try {
         const cart = await getUserCart(user.id);
 
@@ -142,10 +132,8 @@ function Checkout() {
           let remainingItems;
 
           if (checkoutType === "cart") {
-            // Remove all purchased cart items
             remainingItems = [];
           } else {
-            // Remove only the purchased product
             const purchasedIds = checkoutItems.map(
               (item) => item.productId || item.id
             );
@@ -191,7 +179,6 @@ function Checkout() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/home" className="brand-name text-2xl">

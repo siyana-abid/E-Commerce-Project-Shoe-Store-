@@ -22,7 +22,6 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch cart for navbar badge and previous orders
   useEffect(() => {
     const fetchPageData = async () => {
       if (!user) {
@@ -33,7 +32,6 @@ function Orders() {
       }
 
       try {
-        // Fetch cart
         const cart = await getUserCart(user.id);
 
         if (cart) {
@@ -42,12 +40,10 @@ function Orders() {
           dispatch(clearCart());
         }
 
-        // Fetch orders
         const response = await axios.get(
           `http://localhost:3000/orders?userId=${encodeURIComponent(user.id)}`
         );
 
-        // Latest order first
         const sortedOrders = [...response.data].sort(
           (a, b) =>
             new Date(b.orderDate).getTime() -
