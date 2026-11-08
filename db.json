@@ -561,6 +561,20 @@
       "password": "1234",
       "role": "user",
       "id": "HXDut79UgaY"
+    },
+    {
+      "name": "Isra",
+      "email": "isra@gmail.com",
+      "password": "isra 2009",
+      "role": "user",
+      "id": "lRDgqku2iUQ"
+    },
+    {
+      "name": "soudha",
+      "email": "soudha@gmail.com",
+      "password": "shoudha123",
+      "role": "user",
+      "id": "98mdOtbR0o8"
     }
   ],
   "orders": [
@@ -848,6 +862,86 @@
       "orderDate": "2026-11-05T15:51:53.188Z",
       "status": "Confirmed",
       "id": "Cw_IJo5uz1w"
+    },
+    {
+      "userId": "lRDgqku2iUQ",
+      "userName": "Isra",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "price": 4500,
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "quantity": 1
+        },
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "quantity": 1
+        },
+        {
+          "productId": "3",
+          "name": "Puma Classic Sneakers",
+          "price": 3200,
+          "image": "https://i.pinimg.com/736x/4e/ef/53/4eef53ef22b84e54f58c4be8f2abe54b.jpg",
+          "quantity": 1
+        },
+        {
+          "productId": "26",
+          "name": "Retro Street Sneakers",
+          "price": 3300,
+          "image": "https://i.pinimg.com/736x/56/7f/7a/567f7a8df8311c1b48785882433dbb30.jpg",
+          "quantity": 1
+        },
+        {
+          "productId": "46",
+          "name": "Suede Ankle Boots",
+          "price": 5300,
+          "image": "https://i.pinimg.com/736x/d8/11/49/d81149fcf7f0b2a1f1f2f999c78625ac.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 5,
+      "totalPrice": 21500,
+      "shippingAddress": {
+        "fullName": "Isra",
+        "phone": "9847968303",
+        "address": "Noormahal,palathara,po vellur",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "670307"
+      },
+      "orderDate": "2026-11-06T05:05:08.489Z",
+      "status": "Confirmed",
+      "id": "4enzP4QwbKw"
+    },
+    {
+      "userId": "98mdOtbR0o8",
+      "userName": "soudha",
+      "items": [
+        {
+          "productId": "7",
+          "name": "Air Jordan Retro",
+          "price": 6500,
+          "image": "https://i.pinimg.com/736x/74/c6/fc/74c6fcaa3cab7a95381edd4078dae922.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "totalPrice": 6500,
+      "shippingAddress": {
+        "fullName": "soudha",
+        "phone": "3244521567",
+        "address": "fdhwyeueoinwed,",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "123456"
+      },
+      "orderDate": "2026-11-07T12:32:19.041Z",
+      "status": "Confirmed",
+      "id": "KqPTzA2z7gY"
     }
   ],
   "carts": [
@@ -858,7 +952,16 @@
     },
     {
       "userId": "bESrBzbcp_E",
-      "items": [],
+      "items": [
+        {
+          "productId": "12",
+          "name": "Adidas Sports Pro",
+          "price": 4800,
+          "image": "https://i.pinimg.com/736x/8b/b7/c5/8bb7c5b92b8db4e5f5c1b92580d70d13.jpg",
+          "stock": 15,
+          "quantity": 1
+        }
+      ],
       "id": "L7Yu9OZNUH4"
     },
     {
@@ -878,8 +981,41 @@
     },
     {
       "userId": "HXDut79UgaY",
-      "items": [],
+      "items": [
+        {
+          "productId": "1",
+          "name": "Nike Air Max",
+          "price": 4500,
+          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
+          "stock": 15,
+          "quantity": 2
+        }
+      ],
       "id": "anpm7mauicg"
+    },
+    {
+      "userId": "lRDgqku2iUQ",
+      "items": [],
+      "id": "dTAfRB3lDM0"
+    },
+    {
+      "userId": "98mdOtbR0o8",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "stock": 15,
+          "quantity": 1
+        }
+      ],
+      "id": "_hFthq6OvRg"
+    },
+    {
+      "userId": "3JOmG_Mqg_E",
+      "items": [],
+      "id": "cPmDZ8K--PU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

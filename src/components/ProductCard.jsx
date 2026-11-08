@@ -52,7 +52,6 @@ function ProductCard({ product }) {
 
       // Update Redux with latest cart items
       dispatch(setCartItems(updatedCart.items || []));
-      console.log("REDUX CART UPDATED:", updatedCart.items);
 
       setAdded(true);
     } catch (error) {

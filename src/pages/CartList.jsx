@@ -194,7 +194,7 @@ function CartList() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      {/* Navbar */}
+      
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/home" className="brand-name text-2xl">
@@ -250,7 +250,7 @@ function CartList() {
         </div>
       </nav>
 
-      {/* Heading */}
+      
       <section className="text-center pt-12 pb-10 px-5">
         <p className="uppercase tracking-[3px] text-sm mb-3">
           TREDORA COLLECTION
@@ -261,7 +261,7 @@ function CartList() {
         </h1>
       </section>
 
-      {/* Cart Content */}
+    
       <main className="flex-1">
 
         <section className="max-w-5xl mx-auto px-5 pb-16">
@@ -294,7 +294,7 @@ function CartList() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-              {/* Cart Items */}
+            
               <div className="lg:col-span-2 space-y-5">
 
                 {cart.map((item) => (
@@ -331,7 +331,7 @@ function CartList() {
                         ₹{item.price}
                       </p>
 
-                      {/* Quantity */}
+                    
                       <div className="flex items-center gap-3 mt-4">
 
                         <button
@@ -369,7 +369,7 @@ function CartList() {
                         ).toFixed(2)}
                       </p>
 
-                      {/* Buy Now */}
+                    
                       <button
                         type="button"
                         disabled={isUpdating}
@@ -379,7 +379,6 @@ function CartList() {
                         Buy Now
                       </button>
 
-                      {/* Remove */}
                       <button
                         type="button"
                         disabled={isUpdating}
@@ -395,7 +394,6 @@ function CartList() {
 
               </div>
 
-              {/* Order Summary */}
               <div className="bg-white rounded-3xl p-7 shadow-sm h-fit">
 
                 <h2 className="text-2xl font-bold mb-6">
@@ -423,7 +421,6 @@ function CartList() {
                   <span>₹{totalPrice.toFixed(2)}</span>
                 </div>
 
-                {/* Checkout */}
                 <button
                   type="button"
                   onClick={handleCheckout}
@@ -440,7 +437,6 @@ function CartList() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
         <p className="brand-name text-xl">
