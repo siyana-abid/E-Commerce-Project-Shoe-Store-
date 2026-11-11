@@ -2,6 +2,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
   const navigate = useNavigate();
@@ -14,7 +17,7 @@ function Login() {
 
     try {
       const response = await axios.get(
-        "http://localhost:3000/users"
+        `${API_URL}/users`
       );
 
       const user = response.data.find(
@@ -24,7 +27,19 @@ function Login() {
       );
 
       if (!user) {
-        alert("Invalid email or password");
+        toast.error("Invalid email or password");
+        return;
+      }
+
+      // Check whether user is blocked
+      if (user.blocked === true) {
+        toast.error("Your account has been blocked");
+        return;
+      }
+
+      // Check whether user account is inactive
+      if (user.status === "inactive") {
+        toast.error("Your account is inactive");
         return;
       }
 
@@ -38,7 +53,7 @@ function Login() {
         })
       );
 
-      alert("Login successful!");
+      toast.success("Login successful!");
 
       if (user.role === "admin") {
         navigate("/admin");
@@ -47,18 +62,16 @@ function Login() {
       }
 
     } catch (error) {
-      alert("Login failed");
+      toast.error("Login failed");
     }
   };
 
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] flex items-center justify-center p-5">
-
       <form
         onSubmit={handleLogin}
         className="bg-white w-full max-w-md p-8 md:p-10 rounded-3xl shadow-xl border border-[rgba(59,42,34,0.1)]"
       >
-
         <h1 className="text-3xl font-bold text-[rgb(59,42,34)] text-center mb-2">
           Welcome Back
         </h1>
@@ -109,14 +122,6 @@ function Login() {
             Register
           </Link>
         </p>
-
-        <Link
-          to="/login"
-          className="block text-center text-sm text-[rgba(59,42,34,0.6)] mt-5 hover:underline"
-        >
-          Login Page
-        </Link>
-
       </form>
     </div>
   );

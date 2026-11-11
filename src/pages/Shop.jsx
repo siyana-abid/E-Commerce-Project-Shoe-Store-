@@ -1,35 +1,36 @@
+
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import Navbar from "../components/navbar";
 
 import { getProducts } from "../services/productService";
 import ProductCard from "../components/ProductCard";
+import Footer from "../components/Footer";
 
 function Shop() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("default");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const cartItems = useSelector((state) => state.cart.items);
-
-  const cartCount = cartItems.reduce(
-    (total, item) => total + Number(item.quantity || 0),
-    0
-  );
-
   const [visibleCount, setVisibleCount] = useState(12);
 
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-
+  // Fetch active products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts();
 
-        const uniqueProducts = data.filter(
+        // Remove inactive products
+        const activeProducts = data.filter(
+          (item) => item.active !== false
+        );
+
+        // Remove duplicate products
+        const uniqueProducts = activeProducts.filter(
           (item, index, array) =>
             array.findIndex(
               (product) => product.id === item.id
@@ -37,6 +38,7 @@ function Shop() {
         );
 
         setProducts(uniqueProducts);
+
       } catch (error) {
         setError("Failed to load products");
       } finally {
@@ -47,6 +49,18 @@ function Shop() {
     fetchProducts();
   }, []);
 
+  // Debouncing Search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
+  // Get unique categories
   const categories = [
     "All",
     ...new Set(
@@ -56,10 +70,11 @@ function Shop() {
     ),
   ];
 
+  // Search and category filter
   let filteredProducts = products.filter((item) => {
     const matchesSearch = (item.name || "")
       .toLowerCase()
-      .includes(search.trim().toLowerCase());
+      .includes(debouncedSearch.trim().toLowerCase());
 
     const productCategory = (item.category || "")
       .trim()
@@ -74,7 +89,7 @@ function Shop() {
     return matchesSearch && matchesCategory;
   });
 
-  
+  // Sort products
   if (sort === "lowToHigh") {
     filteredProducts.sort(
       (a, b) => Number(a.price) - Number(b.price)
@@ -89,20 +104,24 @@ function Shop() {
     );
   }
 
+  // View More
   const handleViewMore = () => {
     setVisibleCount((previousCount) => previousCount + 12);
   };
 
+  // Search change
   const handleSearchChange = (value) => {
     setSearch(value);
     setVisibleCount(12);
   };
 
+  // Category change
   const handleCategoryChange = (value) => {
     setCategory(value);
     setVisibleCount(12);
   };
 
+  // Sort change
   const handleSortChange = (value) => {
     setSort(value);
     setVisibleCount(12);
@@ -133,79 +152,9 @@ function Shop() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)]">
 
-      <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
+      <Navbar />
 
-        <Link to="/" className="brand-name text-2xl">
-          TREDORA
-        </Link>
-
-        <div className="flex gap-5 items-center text-sm md:text-base">
-
-          <Link to="/" className="font-semibold hover:opacity-60">
-            Home
-          </Link>
-
-          {user && (
-            <>
-              <Link to="/wishlist" className="hover:opacity-60">
-                Wishlist
-              </Link>
-
-              <Link to="/orders" className="hover:opacity-60">
-                Orders
-              </Link>
-
-              <Link
-                to="/cart"
-                className="relative hover:opacity-60"
-                aria-label={`Cart with ${cartCount} items`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="25"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="9" cy="21" r="1" />
-                  <circle cx="20" cy="21" r="1" />
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                </svg>
-
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-            </>
-          )}
-
-          {!user && (
-            <>
-              <Link
-                to="/login"
-                className="border border-[rgb(59,42,34)] px-4 py-2 rounded-full text-sm hover:bg-[rgb(59,42,34)] hover:text-[rgb(245,241,232)] transition"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] px-4 py-2 rounded-full text-sm hover:bg-[rgb(81,57,46)] transition"
-              >
-                Register
-              </Link>
-            </>
-          )}
-
-        </div>
-      </nav>
-
+      {/* Heading */}
       <section className="text-center px-5 pt-14 pb-8">
 
         <p className="uppercase tracking-[4px] text-sm mb-3">
@@ -222,6 +171,7 @@ function Shop() {
 
       </section>
 
+      {/* Search */}
       <div className="max-w-xl mx-auto px-5 mb-6">
 
         <div className="flex items-center bg-white rounded-full border border-[rgba(59,42,34,0.2)] px-5 py-2 shadow-sm">
@@ -248,6 +198,7 @@ function Shop() {
         </div>
       </div>
 
+      {/* Category and Sort */}
       <div className="max-w-5xl mx-auto px-5 mb-12 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
         <div>
@@ -287,6 +238,7 @@ function Shop() {
 
       </div>
 
+      {/* Products */}
       <section className="px-6 md:px-12 pb-16">
 
         <div className="flex justify-between items-center mb-7">
@@ -318,6 +270,7 @@ function Shop() {
 
         </div>
 
+        {/* View More */}
         {visibleCount < filteredProducts.length && (
           <div className="flex justify-center mt-12">
 
@@ -332,17 +285,8 @@ function Shop() {
         )}
 
       </section>
-      <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
 
-        <p className="brand-name text-xl">
-          TREDORA
-        </p>
-
-        <p className="text-sm opacity-70 mt-2">
-          Every step tells your story.
-        </p>
-
-      </footer>
+      <Footer />
 
     </div>
   );

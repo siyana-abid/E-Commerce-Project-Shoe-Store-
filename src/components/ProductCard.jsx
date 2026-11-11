@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 import { addToCart } from "../services/cartService";
 import { setCartItems } from "../redux/cartSlice";
@@ -35,7 +36,7 @@ function ProductCard({ product }) {
     );
 
     if (!currentUser) {
-      alert("Please login to add products to your cart!");
+      toast.error("Please login to add products to your cart!");
       navigate("/login");
       return;
     }
@@ -54,7 +55,7 @@ function ProductCard({ product }) {
 
       setAdded(true);
     } catch (error) {
-      alert(error.message || "Unable to add product to cart!");
+      toast.error(error.message || "Unable to add product to cart!");
     } finally {
       setLoading(false);
     }
@@ -66,7 +67,7 @@ function ProductCard({ product }) {
     );
 
     if (!currentUser) {
-      alert("Please login to use your wishlist!");
+      toast.error("Please login to use your wishlist!");
       navigate("/login");
       return;
     }
@@ -153,23 +154,22 @@ function ProductCard({ product }) {
             ) : added ? (
               <span className="text-xl">✓</span>
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="23"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" />
-                <circle cx="10" cy="21" r="1" />
-                <circle cx="18" cy="21" r="1" />
-                <path d="M16 3v6" />
-                <path d="M13 6h6" />
-              </svg>
+           <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="25"
+    height="25"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="9" cy="21" r="1" />
+    <circle cx="19" cy="21" r="1" />
+    <path d="M2 3h2l2.5 12.5a2 2 0 0 0 2 1.5h9.5a2 2 0 0 0 2-1.5L22 7H5" />
+    <path d="M10 7v7M15 7v7" />
+  </svg>
             )}
           </button>
 

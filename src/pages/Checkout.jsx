@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 import {
   getUserCart,
@@ -14,6 +15,13 @@ import {
   clearCart,
 } from "../redux/cartSlice";
 
+import Navbar from "../components/navbar";
+import Footer from "../components/Footer";
+
+const API_URL = import.meta.env.VITE_API_URL;
+const COUPON_CODE = "WELCOME20";
+const DISCOUNT_PERCENTAGE = 20;
+
 function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,15 +29,7 @@ function Checkout() {
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  const reduxCartItems = useSelector((state) => state.cart.items);
-
-  const cartCount = reduxCartItems.reduce(
-    (total, item) => total + Number(item.quantity || 0),
-    0
-  );
-
   const checkoutItems = location.state?.items || [];
-
   const checkoutType = location.state?.checkoutType || "cart";
 
   const [formData, setFormData] = useState({
@@ -41,11 +41,15 @@ function Checkout() {
     pincode: "",
   });
 
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState("");
+  const [couponChecking, setCouponChecking] = useState(false);
+
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate("/register", { replace: true });
       return;
     }
 
@@ -63,28 +67,100 @@ function Checkout() {
     }));
   };
 
+  // Calculate subtotal
   const totalItems = checkoutItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
     0
   );
 
-  const totalPrice = checkoutItems.reduce(
+  const subtotal = checkoutItems.reduce(
     (total, item) =>
       total +
       Number(item.price || 0) * Number(item.quantity || 0),
     0
   );
 
+  // Calculate coupon discount
+  const discountAmount = appliedCoupon
+    ? (subtotal * DISCOUNT_PERCENTAGE) / 100
+    : 0;
+
+  const finalTotal = subtotal - discountAmount;
+
+  // Check whether this user can use the coupon
+  const checkCouponEligibility = async () => {
+    const [userResponse, ordersResponse] = await Promise.all([
+      axios.get(`${API_URL}/users/${user.id}`),
+      axios.get(`${API_URL}/orders?userId=${user.id}`),
+    ]);
+
+    const currentUser = userResponse.data;
+    const previousOrders = ordersResponse.data;
+
+    const alreadyUsed =
+      currentUser.welcomeCouponUsed === true ||
+      previousOrders.some(
+        (order) => order.couponCode === COUPON_CODE
+      );
+
+    const hasPreviousOrder = previousOrders.length > 0;
+
+    return !alreadyUsed && !hasPreviousOrder;
+  };
+
+  // Apply coupon
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) {
+      toast.error("Please enter a coupon code.");
+      return;
+    }
+
+    if (couponInput.trim().toUpperCase() !== COUPON_CODE) {
+      toast.error("Invalid coupon code.");
+      setAppliedCoupon("");
+      return;
+    }
+
+    if (couponChecking) return;
+
+    setCouponChecking(true);
+
+    try {
+      const eligible = await checkCouponEligibility();
+
+      if (!eligible) {
+        setAppliedCoupon("");
+        toast.error("This coupon is only valid for your first order.");
+        return;
+      }
+
+      setAppliedCoupon(COUPON_CODE);
+      toast.success("WELCOME20 applied! You got 20% off.");
+    } catch (error) {
+      console.error("Coupon check failed:", error);
+      toast.error("Unable to verify coupon. Please try again.");
+    } finally {
+      setCouponChecking(false);
+    }
+  };
+
+  // Remove applied coupon
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon("");
+    setCouponInput("");
+    toast.success("Coupon removed.");
+  };
+
   const handleConfirmOrder = async (e) => {
     e.preventDefault();
 
     if (!user) {
-      navigate("/login");
+      navigate("/register");
       return;
     }
 
     if (!checkoutItems.length) {
-      alert("Your checkout is empty!");
+      toast.error("Your checkout is empty!");
       navigate("/cart");
       return;
     }
@@ -93,7 +169,65 @@ function Checkout() {
 
     setSubmitting(true);
 
+    const updatedProducts = [];
+    let orderCreated = false;
+
     try {
+      // 1. Verify coupon again before placing order
+      if (appliedCoupon === COUPON_CODE) {
+        const eligible = await checkCouponEligibility();
+
+        if (!eligible) {
+          throw new Error(
+            "This coupon is no longer available for your account."
+          );
+        }
+      }
+
+      // 2. Check latest stock for every product
+      for (const item of checkoutItems) {
+        const productId = item.productId || item.id;
+        const quantity = Number(item.quantity);
+
+        if (
+          !productId ||
+          !Number.isInteger(quantity) ||
+          quantity <= 0
+        ) {
+          throw new Error("Invalid product quantity.");
+        }
+
+        const response = await axios.get(
+          `${API_URL}/products/${productId}`
+        );
+
+        const product = response.data;
+        const availableStock = Number(product.stock ?? 0);
+
+        if (quantity > availableStock) {
+          throw new Error(
+            `${product.name} has only ${availableStock} items available.`
+          );
+        }
+
+        updatedProducts.push({
+          ...product,
+          oldStock: availableStock,
+          newStock: availableStock - quantity,
+        });
+      }
+
+      // 3. Reduce product stock
+      for (const product of updatedProducts) {
+        await axios.patch(
+          `${API_URL}/products/${product.id}`,
+          {
+            stock: product.newStock,
+          }
+        );
+      }
+
+      // 4. Prepare order items
       const orderItems = checkoutItems.map((item) => ({
         productId: item.productId || item.id,
         name: item.name,
@@ -107,7 +241,11 @@ function Checkout() {
         userName: user.name || user.username || formData.fullName,
         items: orderItems,
         totalItems,
-        totalPrice,
+        subtotal,
+        discountAmount,
+        couponCode: appliedCoupon || null,
+        totalPrice: finalTotal,
+
         shippingAddress: {
           fullName: formData.fullName.trim(),
           phone: formData.phone.trim(),
@@ -116,15 +254,30 @@ function Checkout() {
           state: formData.state.trim(),
           pincode: formData.pincode.trim(),
         },
+
         orderDate: new Date().toISOString(),
         status: "Confirmed",
       };
 
-      await axios.post(
-        "http://localhost:3000/orders",
-        orderData
-      );
+      // 5. Save order
+      await axios.post(`${API_URL}/orders`, orderData);
 
+      // Only mark the order as created after successful POST
+      orderCreated = true;
+
+      // 6. Mark coupon as used after successful order
+      if (appliedCoupon === COUPON_CODE) {
+        try {
+          await axios.patch(`${API_URL}/users/${user.id}`, {
+            welcomeCouponUsed: true,
+          });
+        } catch (couponError) {
+          // The saved order's couponCode also records its usage
+          console.error("Coupon flag update failed:", couponError);
+        }
+      }
+
+      // 7. Update cart after successful order
       try {
         const cart = await getUserCart(user.id);
 
@@ -135,11 +288,12 @@ function Checkout() {
             remainingItems = [];
           } else {
             const purchasedIds = checkoutItems.map(
-              (item) => item.productId || item.id
+              (item) => String(item.productId || item.id)
             );
 
             remainingItems = cart.items.filter(
-              (item) => !purchasedIds.includes(item.productId)
+              (item) =>
+                !purchasedIds.includes(String(item.productId))
             );
           }
 
@@ -155,22 +309,45 @@ function Checkout() {
       } catch (cartError) {
         console.error("Cart update failed:", cartError);
 
-        alert(
-          "Your order was placed, but the cart could not be updated. Please check My Orders before placing another order."
+        toast.error(
+          "Your order was placed, but the cart could not be updated. Please check My Orders."
         );
 
         navigate("/orders", { replace: true });
         return;
       }
 
-      alert("Your order has been placed successfully!");
-
+      toast.success("Your order has been placed successfully!");
       navigate("/orders", { replace: true });
 
     } catch (error) {
       console.error("Order placement failed:", error);
 
-      alert("Unable to place your order. Please try again.");
+      // Restore stock if order was not created
+      if (!orderCreated) {
+        for (const product of updatedProducts) {
+          try {
+            await axios.patch(
+              `${API_URL}/products/${product.id}`,
+              {
+                stock: product.oldStock,
+              }
+            );
+          } catch (rollbackError) {
+            console.error(
+              "Stock restoration failed:",
+              rollbackError
+            );
+          }
+        }
+      }
+
+      toast.error(
+        error.response?.data?.message ||
+        error.message ||
+        "Unable to place your order. Please try again."
+      );
+
     } finally {
       setSubmitting(false);
     }
@@ -179,63 +356,9 @@ function Checkout() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
-
-        <Link to="/home" className="brand-name text-2xl">
-          TREDORA
-        </Link>
-
-        <div className="flex gap-5 items-center text-sm md:text-base">
-
-          <Link to="/home" className="font-semibold hover:opacity-60">
-            Home
-          </Link>
-
-          <Link to="/shop" className="font-semibold hover:opacity-60">
-            Shop
-          </Link>
-
-          <Link to="/wishlist" className="font-semibold hover:opacity-60">
-            Wishlist
-          </Link>
-
-          <Link to="/orders" className="font-semibold hover:opacity-60">
-            Orders
-          </Link>
-
-          <Link
-            to="/cart"
-            className="relative hover:opacity-60"
-            aria-label={`Cart with ${cartCount} items`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
-        </div>
-      </nav>
+      <Navbar />
 
       <section className="text-center pt-12 pb-10 px-5">
-
         <p className="uppercase tracking-[3px] text-sm mb-3">
           TREDORA COLLECTION
         </p>
@@ -247,13 +370,10 @@ function Checkout() {
         <p className="text-gray-500 mt-3">
           Enter your delivery details to place your order.
         </p>
-
       </section>
 
       <main className="flex-1">
-
         {checkoutItems.length > 0 && (
-
           <section className="max-w-6xl mx-auto px-5 pb-16">
 
             <form
@@ -261,6 +381,7 @@ function Checkout() {
               className="grid grid-cols-1 lg:grid-cols-3 gap-8"
             >
 
+              {/* Delivery Information */}
               <div className="lg:col-span-2 bg-white rounded-3xl p-6 md:p-9 shadow-sm">
 
                 <h2 className="text-2xl font-bold mb-2">
@@ -382,9 +503,9 @@ function Checkout() {
                   </div>
 
                 </div>
-
               </div>
 
+              {/* Order Summary */}
               <div className="bg-white rounded-3xl p-6 md:p-7 shadow-sm h-fit">
 
                 <h2 className="text-2xl font-bold mb-6">
@@ -394,14 +515,12 @@ function Checkout() {
                 <div className="space-y-5">
 
                   {checkoutItems.map((item, index) => (
-
                     <div
                       key={`${item.id || item.productId}-${index}`}
                       className="flex gap-4 items-center"
                     >
 
                       <div className="w-16 h-16 bg-[rgb(245,241,232)] rounded-xl p-2 flex items-center justify-center shrink-0">
-
                         {item.image ? (
                           <img
                             src={item.image}
@@ -413,11 +532,9 @@ function Checkout() {
                             No Image
                           </span>
                         )}
-
                       </div>
 
                       <div className="flex-1 min-w-0">
-
                         <h3 className="font-semibold truncate">
                           {item.name}
                         </h3>
@@ -429,7 +546,6 @@ function Checkout() {
                         <p className="text-sm font-semibold">
                           ₹{Number(item.price).toFixed(2)}
                         </p>
-
                       </div>
 
                       <p className="font-bold text-sm">
@@ -441,17 +557,89 @@ function Checkout() {
                       </p>
 
                     </div>
-
                   ))}
 
                 </div>
 
+                {/* Coupon Section */}
+                <div className="border-t border-gray-200 mt-6 pt-5">
+
+                  <h3 className="font-bold mb-3">
+                    Have a Coupon?
+                  </h3>
+
+                  {!appliedCoupon ? (
+                    <div className="flex gap-2">
+
+                      <input
+                        type="text"
+                        value={couponInput}
+                        onChange={(e) =>
+                          setCouponInput(e.target.value)
+                        }
+                        placeholder="Enter coupon code"
+                        className="min-w-0 flex-1 border border-gray-300 rounded-xl px-3 py-3 outline-none uppercase focus:border-[rgb(59,42,34)]"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={handleApplyCoupon}
+                        disabled={couponChecking}
+                        className="bg-[rgb(59,42,34)] text-white px-4 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-50"
+                      >
+                        {couponChecking ? "Checking..." : "Apply"}
+                      </button>
+
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl p-3">
+
+                      <div>
+                        <p className="font-bold text-green-800">
+                          {appliedCoupon} Applied
+                        </p>
+
+                        <p className="text-xs text-green-700">
+                          20% discount added
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="text-sm font-semibold text-red-600 hover:underline"
+                      >
+                        Remove
+                      </button>
+
+                    </div>
+                  )}
+
+                  <p className="text-xs text-gray-500 mt-2">
+                    Use WELCOME20 for 20% off your first order.
+                  </p>
+
+                </div>
+
+                {/* Price Details */}
                 <div className="border-t border-gray-200 mt-6 pt-5 space-y-4">
 
                   <div className="flex justify-between text-gray-600">
                     <span>Total Items</span>
                     <span>{totalItems}</span>
                   </div>
+
+                  <div className="flex justify-between text-gray-600">
+                    <span>Subtotal</span>
+                    <span>₹{subtotal.toFixed(2)}</span>
+                  </div>
+
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-green-700 font-semibold">
+                      <span>Coupon Discount (20%)</span>
+                      <span>- ₹{discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
 
                   <div className="flex justify-between text-gray-600">
                     <span>Delivery</span>
@@ -462,7 +650,7 @@ function Checkout() {
 
                   <div className="flex justify-between text-xl font-bold border-t border-gray-200 pt-4">
                     <span>Total</span>
-                    <span>₹{totalPrice.toFixed(2)}</span>
+                    <span>₹{finalTotal.toFixed(2)}</span>
                   </div>
 
                 </div>
@@ -487,24 +675,11 @@ function Checkout() {
               </div>
 
             </form>
-
           </section>
-
         )}
-
       </main>
 
-      <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
-
-        <p className="brand-name text-xl">
-          TREDORA
-        </p>
-
-        <p className="text-sm opacity-70 mt-2">
-          Every step tells your story.
-        </p>
-
-      </footer>
+      <Footer />
 
     </div>
   );

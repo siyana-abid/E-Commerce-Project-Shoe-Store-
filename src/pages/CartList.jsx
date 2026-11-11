@@ -1,7 +1,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 import {
   getUserCart,
@@ -9,6 +10,8 @@ import {
 } from "../services/cartService";
 
 import { setCartItems, clearCart } from "../redux/cartSlice";
+import Navbar from "../components/navbar";
+import Footer from "../components/Footer";
 
 function CartList() {
   const navigate = useNavigate();
@@ -16,15 +19,9 @@ function CartList() {
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  const reduxCartItems = useSelector((state) => state.cart.items);
-
-  const totalItems = reduxCartItems.reduce(
-    (total, item) => total + Number(item.quantity || 0),
-    0
-  );
-
   const [cart, setCart] = useState([]);
   const [cartRecord, setCartRecord] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -34,6 +31,7 @@ function CartList() {
     const fetchCart = async () => {
       if (!user) {
         setCart([]);
+        setSelectedItems([]);
         dispatch(clearCart());
         setLoading(false);
         return;
@@ -51,15 +49,22 @@ function CartList() {
           }));
 
           setCart(formattedItems);
+
+          // Select all products by default
+          setSelectedItems(
+            formattedItems.map((item) => String(item.id))
+          );
+
           dispatch(setCartItems(data.items || []));
         } else {
           setCartRecord(null);
           setCart([]);
+          setSelectedItems([]);
           dispatch(clearCart());
         }
       } catch (error) {
         console.error("Unable to load cart:", error);
-        alert("Unable to load your cart!");
+        toast.error("Unable to load your cart!");
       } finally {
         setLoading(false);
       }
@@ -88,13 +93,50 @@ function CartList() {
 
       setCartRecord(response);
       dispatch(setCartItems(response.items || formattedItems));
+
+      // Remove deleted products from selection
+      setSelectedItems((previous) =>
+        previous.filter((id) =>
+          updatedItems.some(
+            (item) => String(item.id) === id
+          )
+        )
+      );
     } catch (error) {
       console.error("Unable to update cart:", error);
       setCart(previousCart);
-      alert("Unable to update your cart!");
+      toast.error("Unable to update your cart!");
     } finally {
       cartActionLock.current = false;
       setIsUpdating(false);
+    }
+  };
+
+  // Select or deselect a product
+  const toggleSelection = (id) => {
+    const itemId = String(id);
+
+    setSelectedItems((previous) =>
+      previous.includes(itemId)
+        ? previous.filter((selectedId) => selectedId !== itemId)
+        : [...previous, itemId]
+    );
+  };
+
+  // Select all or deselect all products
+  const allSelected =
+    cart.length > 0 &&
+    cart.every((item) =>
+      selectedItems.includes(String(item.id))
+    );
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(
+        cart.map((item) => String(item.id))
+      );
     }
   };
 
@@ -106,14 +148,6 @@ function CartList() {
     );
 
     if (!item) return;
-
-    const stock =
-      item.stock == null ? Infinity : Number(item.stock);
-
-    if (Number(item.quantity) >= stock) {
-      alert("Maximum available stock reached!");
-      return;
-    }
 
     const updatedItems = cart.map((product) =>
       String(product.id) === String(id)
@@ -153,10 +187,21 @@ function CartList() {
     await saveCartItems(updatedItems);
   };
 
-  const totalPrice = cart.reduce(
+  // Only selected products
+  const selectedCartItems = cart.filter((item) =>
+    selectedItems.includes(String(item.id))
+  );
+
+  const totalPrice = selectedCartItems.reduce(
     (total, item) =>
       total +
       Number(item.price || 0) * Number(item.quantity || 1),
+    0
+  );
+
+  const totalQuantity = selectedCartItems.reduce(
+    (total, item) =>
+      total + Number(item.quantity || 0),
     0
   );
 
@@ -170,15 +215,15 @@ function CartList() {
   };
 
   const handleCheckout = () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
+    if (selectedCartItems.length === 0) {
+      toast.error("Please select at least one product!");
       return;
     }
 
     navigate("/checkout", {
       state: {
-        items: cart,
-        checkoutType: "cart",
+        items: selectedCartItems,
+        checkoutType: "selected",
       },
     });
   };
@@ -186,63 +231,8 @@ function CartList() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)] flex flex-col">
 
-      
-      <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
+      <Navbar />
 
-        <Link to="/home" className="brand-name text-2xl">
-          TREDORA
-        </Link>
-
-        <div className="flex gap-5 items-center text-sm md:text-base">
-
-          <Link to="/home" className="font-semibold hover:opacity-60">
-            Home
-          </Link>
-
-          <Link to="/shop" className="font-semibold hover:opacity-60">
-            Shop
-          </Link>
-
-          <Link to="/wishlist" className="font-semibold hover:opacity-60">
-            Wishlist
-          </Link>
-
-          <Link to="/orders" className="font-semibold hover:opacity-60">
-            Orders
-          </Link>
-
-          <Link
-            to="/cart"
-            className="relative hover:opacity-60"
-            aria-label={`Cart with ${totalItems} items`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </Link>
-
-        </div>
-      </nav>
-
-      
       <section className="text-center pt-12 pb-10 px-5">
         <p className="uppercase tracking-[3px] text-sm mb-3">
           TREDORA COLLECTION
@@ -253,9 +243,7 @@ function CartList() {
         </h1>
       </section>
 
-    
       <main className="flex-1">
-
         <section className="max-w-5xl mx-auto px-5 pb-16">
 
           {loading ? (
@@ -286,106 +274,149 @@ function CartList() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            
               <div className="lg:col-span-2 space-y-5">
 
-                {cart.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-white rounded-3xl p-5 flex flex-col sm:flex-row gap-5 shadow-sm"
-                  >
+                {/* Select All */}
+                <div className="bg-white rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm">
 
-                    <div className="w-full sm:w-36 h-36 bg-[rgb(245,241,232)] rounded-2xl flex items-center justify-center p-3">
+                  <label className="flex items-center gap-3 font-semibold cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleSelectAll}
+                      className="w-5 h-5 accent-[rgb(59,42,34)] cursor-pointer"
+                    />
 
-                      {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-contain"
+                    Select All
+                  </label>
+
+                  <span className="text-sm text-gray-500">
+                    {selectedCartItems.length} of {cart.length} selected
+                  </span>
+
+                </div>
+
+                {cart.map((item) => {
+                  const isSelected = selectedItems.includes(
+                    String(item.id)
+                  );
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`bg-white rounded-3xl p-5 flex flex-col sm:flex-row gap-5 shadow-sm border-2 transition ${
+                        isSelected
+                          ? "border-[rgb(59,42,34)]"
+                          : "border-transparent"
+                      }`}
+                    >
+
+                      {/* Product selection */}
+                      <div className="flex items-start gap-3">
+
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelection(item.id)}
+                          aria-label={`Select ${item.name}`}
+                          className="w-5 h-5 mt-2 accent-[rgb(59,42,34)] cursor-pointer"
                         />
-                      ) : (
-                        <span className="text-sm">No Image</span>
-                      )}
 
-                    </div>
+                        <div className="w-full sm:w-36 h-36 bg-[rgb(245,241,232)] rounded-2xl flex items-center justify-center p-3">
 
-                    <div className="flex-1">
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-sm">
+                              No Image
+                            </span>
+                          )}
 
-                      <p className="text-xs uppercase tracking-widest text-gray-500">
-                        {item.category}
-                      </p>
+                        </div>
 
-                      <h2 className="text-xl font-bold mt-1">
-                        {item.name}
-                      </h2>
+                      </div>
 
-                      <p className="text-xl font-bold mt-3">
-                        ₹{item.price}
-                      </p>
+                      <div className="flex-1">
 
-                    
-                      <div className="flex items-center gap-3 mt-4">
+                        <p className="text-xs uppercase tracking-widest text-gray-500">
+                          {item.category}
+                        </p>
 
-                        <button
-                          type="button"
-                          disabled={
-                            isUpdating ||
-                            item.quantity <= 1
-                          }
-                          onClick={() => decreaseQuantity(item.id)}
-                          className="w-9 h-9 rounded-full bg-[rgb(245,241,232)] font-bold disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          −
-                        </button>
+                        <h2 className="text-xl font-bold mt-1">
+                          {item.name}
+                        </h2>
 
-                        <span className="font-bold">
-                          {item.quantity}
-                        </span>
+                        <p className="text-xl font-bold mt-3">
+                          ₹{item.price}
+                        </p>
+
+                        <div className="flex items-center gap-3 mt-4">
+
+                          <button
+                            type="button"
+                            disabled={
+                              isUpdating ||
+                              item.quantity <= 1
+                            }
+                            onClick={() => decreaseQuantity(item.id)}
+                            className="w-9 h-9 rounded-full bg-[rgb(245,241,232)] font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            −
+                          </button>
+
+                          <span className="font-bold">
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            type="button"
+                            disabled={isUpdating}
+                            onClick={() => increaseQuantity(item.id)}
+                            className="w-9 h-9 rounded-full bg-[rgb(245,241,232)] font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            +
+                          </button>
+
+                        </div>
+
+                        <p className="font-semibold mt-3">
+                          Subtotal: ₹
+                          {(
+                            Number(item.price || 0) *
+                            Number(item.quantity || 1)
+                          ).toFixed(2)}
+                        </p>
 
                         <button
                           type="button"
                           disabled={isUpdating}
-                          onClick={() => increaseQuantity(item.id)}
-                          className="w-9 h-9 rounded-full bg-[rgb(245,241,232)] font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                          onClick={() => handleBuyNow(item)}
+                          className="mt-4 px-6 py-2 rounded-full text-sm font-semibold bg-[rgb(59,42,34)] text-white hover:bg-[rgb(81,57,46)] transition disabled:opacity-40 disabled:cursor-not-allowed"
                         >
-                          +
+                          Buy Now
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={isUpdating}
+                          onClick={() => removeFromCart(item.id)}
+                          className="mt-3 ml-2 px-5 py-2 rounded-full text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          Remove
                         </button>
 
                       </div>
-
-                      <p className="font-semibold mt-3">
-                        Subtotal: ₹
-                        {(
-                          Number(item.price || 0) *
-                          Number(item.quantity || 1)
-                        ).toFixed(2)}
-                      </p>
-
-                    
-                      <button
-                        type="button"
-                        disabled={isUpdating}
-                        onClick={() => handleBuyNow(item)}
-                        className="mt-4 px-6 py-2 rounded-full text-sm font-semibold bg-[rgb(59,42,34)] text-white hover:bg-[rgb(81,57,46)] transition disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        Buy Now
-                      </button>
-
-                      <button
-                        type="button"
-                        disabled={isUpdating}
-                        onClick={() => removeFromCart(item.id)}
-                        className="mt-3 ml-2 px-5 py-2 rounded-full text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        Remove
-                      </button>
-
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
               </div>
 
+              {/* Order Summary */}
               <div className="bg-white rounded-3xl p-7 shadow-sm h-fit">
 
                 <h2 className="text-2xl font-bold mb-6">
@@ -393,19 +424,13 @@ function CartList() {
                 </h2>
 
                 <div className="flex justify-between mb-4">
-                  <span>Products</span>
-                  <span>{cart.length}</span>
+                  <span>Selected Products</span>
+                  <span>{selectedCartItems.length}</span>
                 </div>
 
                 <div className="flex justify-between mb-4">
                   <span>Total Items</span>
-                  <span>
-                    {cart.reduce(
-                      (total, item) =>
-                        total + Number(item.quantity || 0),
-                      0
-                    )}
-                  </span>
+                  <span>{totalQuantity}</span>
                 </div>
 
                 <div className="border-t border-gray-200 pt-5 flex justify-between text-xl font-bold">
@@ -416,11 +441,15 @@ function CartList() {
                 <button
                   type="button"
                   onClick={handleCheckout}
-                  disabled={isUpdating}
+                  disabled={isUpdating || selectedCartItems.length === 0}
                   className="w-full mt-7 bg-[rgb(59,42,34)] text-white py-4 rounded-full font-semibold hover:bg-[rgb(81,57,46)] transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Proceed to Checkout
                 </button>
+
+                <p className="text-xs text-gray-500 text-center mt-3">
+                  Only selected products will be ordered.
+                </p>
 
               </div>
             </div>
@@ -429,17 +458,7 @@ function CartList() {
         </section>
       </main>
 
-      <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
-
-        <p className="brand-name text-xl">
-          TREDORA
-        </p>
-
-        <p className="text-sm opacity-70 mt-2">
-          Every step tells your story.
-        </p>
-
-      </footer>
+      <Footer />
 
     </div>
   );

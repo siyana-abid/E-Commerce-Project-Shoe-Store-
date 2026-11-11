@@ -1,10 +1,12 @@
 
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { getUserCart } from "../services/cartService";
 import { setCartItems, clearCart } from "../redux/cartSlice";
+import Navbar from "../components/navbar";
+
 
 function Home() {
   const navigate = useNavigate();
@@ -12,12 +14,6 @@ function Home() {
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  const cartItems = useSelector((state) => state.cart.items);
-
-  const cartCount = cartItems.reduce(
-    (total, item) => total + Number(item.quantity || 0),
-    0
-  );
 
   // Fetch cart from JSON Server
   useEffect(() => {
@@ -52,100 +48,10 @@ function Home() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    dispatch(clearCart());
-    navigate("/login");
-  };
-
+ 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#38251C]">
-
-      <nav className="flex justify-between items-center px-6 md:px-12 py-5 bg-[#FAF7F2] border-b border-[#38251C]/10">
-
-        <Link to="/home" className="text-3xl font-bold tracking-tight">
-          TREDORA
-        </Link>
-
-        <div className="hidden md:flex items-center gap-8 font-medium text-sm">
-          <Link to="/home" className="border-b-2 border-[#38251C] pb-1">
-            Home
-          </Link>
-
-          <Link to="/shop" className="hover:text-[#A16D4F] transition">
-            Shop
-          </Link>
-
-          <button
-            onClick={() => handleFeatureClick("/wishlist")}
-            className="hover:text-[#A16D4F] transition"
-          >
-            Wishlist
-          </button>
-
-          <button
-            onClick={() => handleFeatureClick("/orders")}
-            className="hover:text-[#A16D4F] transition"
-          >
-            Orders
-          </button>
-
-          <button
-            onClick={() => handleFeatureClick("/cart")}
-            className="relative hover:text-[#A16D4F]"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-
-            {user && cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-        <div className="flex gap-2">
-          {!user ? (
-            <>
-              <Link
-                to="/login"
-                className="border border-[#38251C] px-4 py-2 rounded-full text-sm hover:bg-[#38251C] hover:text-white transition"
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="bg-[#38251C] text-white px-4 py-2 rounded-full text-sm hover:bg-[#624431] transition"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="bg-[#38251C] text-white px-5 py-2 rounded-full text-sm hover:bg-[#624431] transition"
-            >
-              Logout
-            </button>
-          )}
-        </div>
-      </nav>
-
+<Navbar/>
       <section className="grid md:grid-cols-2 items-center gap-8 px-6 md:px-16 py-14 md:py-20">
 
         <div>

@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/carts";
+const API_URL = `${import.meta.env.VITE_API_URL}/carts`;
 
 // Get a particular user's cart
 export const getUserCart = async (userId) => {
@@ -33,20 +33,14 @@ export const addToCart = async (userId, product) => {
   }
 
   const existingItem = cart.items.find(
-    (item) => item.productId === product.id
+    (item) => String(item.productId) === String(product.id)
   );
 
   let updatedItems;
 
   if (existingItem) {
-    const stock = Number(existingItem.stock || 0);
-
-    if (existingItem.quantity >= stock) {
-      throw new Error("Maximum available stock reached!");
-    }
-
     updatedItems = cart.items.map((item) =>
-      item.productId === product.id
+      String(item.productId) === String(product.id)
         ? {
             ...item,
             quantity: item.quantity + 1,
@@ -54,10 +48,6 @@ export const addToCart = async (userId, product) => {
         : item
     );
   } else {
-    if (Number(product.stock || 0) < 1) {
-      throw new Error("This product is out of stock!");
-    }
-
     updatedItems = [
       ...cart.items,
       {

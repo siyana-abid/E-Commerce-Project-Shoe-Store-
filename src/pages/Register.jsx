@@ -2,6 +2,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Register() {
   const navigate = useNavigate();
@@ -13,9 +16,15 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // Password minimum 8 characters validation
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
     try {
       const response = await axios.get(
-        "http://localhost:3000/users"
+        `${API_URL}/users`
       );
 
       const existingUser = response.data.find(
@@ -23,22 +32,22 @@ function Register() {
       );
 
       if (existingUser) {
-        alert("Email already registered!");
+        toast.error("Email already registered!");
         return;
       }
 
-      await axios.post("http://localhost:3000/users", {
+      await axios.post(`${API_URL}/users`, {
         name,
         email,
         password,
         role: "user"
       });
 
-      alert("Registration successful!");
+      toast.success("Registration successful!");
       navigate("/login");
 
     } catch (error) {
-      alert("Registration failed");
+      toast.error("Registration failed");
       console.log(error);
     }
   };
@@ -95,6 +104,7 @@ function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength={8}
           className="w-full p-3 mb-6 rounded-xl border border-[rgba(59,42,34,0.2)] bg-[rgb(245,241,232)] text-[rgb(59,42,34)] outline-none focus:ring-2 focus:ring-[rgb(59,42,34)]"
         />
 

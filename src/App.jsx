@@ -6,68 +6,57 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import { Toaster } from "react-hot-toast";
+
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
 import Shop from "./pages/Shop";
-
 import Wishlist from "./pages/Wishlist";
 import Orders from "./pages/Orders";
 import Checkout from "./pages/Checkout";
 import CartList from "./pages/CartList";
-
 import ProductDetails from "./pages/ProductDetails";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function RootRedirect() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  if (!user) {
-    return <Navigate to="/register" replace />;
-  }
-
-  if (user.role === "admin") {
-    return <Navigate to="/admin" replace />;
-  }
-
-  return <Navigate to="/home" replace />;
-}
+// Admin imports
+import AdminLayout from "./admin/layouts/AdminLayout";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import ManageProducts from "./admin/pages/ManageProducts";
+import ManageUsers from "./admin/pages/ManageUsers";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
+
       <Routes>
 
-        <Route path="/" element={<RootRedirect />} />
+        {/* Default Route */}
+        <Route
+          path="/"
+          element={<Navigate to="/home" replace />}
+        />
 
+        {/* Public Routes */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute role="user">
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="/shop" element={<Shop />} />
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-
+        {/* User Protected Routes */}
         <Route
           path="/cart"
           element={
-            <ProtectedRoute role="user" redirectTo="/login">
+            <ProtectedRoute role="user" redirectTo="/register">
               <CartList />
             </ProtectedRoute>
           }
@@ -76,7 +65,7 @@ function App() {
         <Route
           path="/wishlist"
           element={
-            <ProtectedRoute role="user" redirectTo="/login">
+            <ProtectedRoute role="user" redirectTo="/register">
               <Wishlist />
             </ProtectedRoute>
           }
@@ -85,7 +74,7 @@ function App() {
         <Route
           path="/orders"
           element={
-            <ProtectedRoute role="user" redirectTo="/login">
+            <ProtectedRoute role="user" redirectTo="/register">
               <Orders />
             </ProtectedRoute>
           }
@@ -94,22 +83,36 @@ function App() {
         <Route
           path="/checkout"
           element={
-            <ProtectedRoute role="user" redirectTo="/login">
+            <ProtectedRoute role="user" redirectTo="/register">
               <Checkout />
             </ProtectedRoute>
           }
         />
 
+        {/* Admin Protected Routes */}
         <Route
-          path="/product/:id"
-          element={<ProductDetails />}
-        />
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
 
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
+          <Route
+            path="products"
+            element={<ManageProducts />}
+          />
 
+          <Route
+            path="users"
+            element={<ManageUsers />}
+          />
+        </Route>
+
+        {/* Unknown Routes */}
+      <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

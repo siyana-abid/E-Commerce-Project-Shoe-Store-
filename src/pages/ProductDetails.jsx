@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
+import Footer from "../components/Footer";
 
 import {
   addToCart,
   getUserCart,
 } from "../services/cartService";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function ProductDetails() {
   const { id } = useParams();
@@ -35,10 +39,17 @@ function ProductDetails() {
         setAdded(false);
 
         const response = await axios.get(
-          `http://localhost:3000/products/${id}`
+          `${API_URL}/products/${id}`
         );
 
+        // Check whether product is active
+        if (response.data.active === false) {
+          setError("This product is currently unavailable!");
+          return;
+        }
+
         setProduct(response.data);
+
       } catch (error) {
         setError("Product not found!");
       } finally {
@@ -72,6 +83,7 @@ function ProductDetails() {
         setCartCount(0);
       }
     } catch (error) {
+      // Cart count fetch failed
     }
   };
 
@@ -96,13 +108,14 @@ function ProductDetails() {
     const user = getUser();
 
     if (!user) {
-      alert("Please login to add products to your cart!");
+      toast.error("Please login to add products to your cart!");
       navigate("/login");
       return;
     }
 
-    if (Number(product.stock ?? 0) <= 0) {
-      alert("Sorry! This product is out of stock.");
+    // Prevent adding unavailable products
+    if (!product || product.active === false) {
+      toast.error("This product is currently unavailable!");
       return;
     }
 
@@ -118,8 +131,9 @@ function ProductDetails() {
 
       setCartCount(total);
       setAdded(true);
+
     } catch (error) {
-      alert("Unable to add product to cart!");
+      toast.error("Unable to add product to cart!");
     } finally {
       setCartLoading(false);
     }
@@ -138,13 +152,18 @@ function ProductDetails() {
   if (error || !product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(245,241,232)]">
-        <h2 className="text-2xl font-bold mb-5">
+
+        <h2 className="text-2xl font-bold mb-5 text-[#3B2A22]">
           {error || "Product not found!"}
         </h2>
 
-        <Link to="/shop" className="underline">
+        <Link
+          to="/shop"
+          className="underline text-[#3B2A22]"
+        >
           Back to Shop
         </Link>
+
       </div>
     );
   }
@@ -152,6 +171,7 @@ function ProductDetails() {
   return (
     <div className="min-h-screen bg-[rgb(245,241,232)] text-[rgb(59,42,34)]">
 
+      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-12 py-6 border-b border-[rgba(59,42,34,0.2)]">
 
         <Link to="/" className="brand-name text-2xl">
@@ -165,6 +185,7 @@ function ProductDetails() {
             className="relative hover:opacity-60"
             aria-label={`Cart with ${cartCount} items`}
           >
+
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -172,13 +193,14 @@ function ProductDetails() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="1.7"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
               <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              <circle cx="19" cy="21" r="1" />
+              <path d="M2 3h2l2.5 12.5a2 2 0 0 0 2 1.5h9.5a2 2 0 0 0 2-1.5L22 7H5" />
+              <path d="M10 7v7M15 7v7" />
             </svg>
 
             {cartCount > 0 && (
@@ -186,6 +208,7 @@ function ProductDetails() {
                 {cartCount}
               </span>
             )}
+
           </Link>
 
           <Link
@@ -198,6 +221,7 @@ function ProductDetails() {
         </div>
       </nav>
 
+      {/* Product Details */}
       <section className="max-w-6xl mx-auto px-6 py-16">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -271,15 +295,10 @@ function ProductDetails() {
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={
-                Number(product.stock ?? 0) <= 0 ||
-                cartLoading
-              }
+              disabled={cartLoading}
               className="w-full bg-[rgb(59,42,34)] text-[rgb(245,241,232)] py-4 rounded-full font-semibold hover:bg-[rgb(81,57,46)] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {Number(product.stock ?? 0) <= 0
-                ? "Out of Stock"
-                : cartLoading
+              {cartLoading
                 ? "Adding..."
                 : added
                 ? "✓ Added to Cart"
@@ -301,17 +320,7 @@ function ProductDetails() {
 
       </section>
 
-      <footer className="bg-[rgb(59,42,34)] text-[rgb(245,241,232)] text-center py-7">
-
-        <p className="brand-name text-xl">
-          TREDORA
-        </p>
-
-        <p className="text-sm opacity-70 mt-2">
-          Every step tells your story.
-        </p>
-
-      </footer>
+      <Footer />
 
     </div>
   );
