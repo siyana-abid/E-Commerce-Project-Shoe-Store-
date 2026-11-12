@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 function AdminLayout() {
   const navigate = useNavigate();
 
-  // Logout function
   const handleLogout = () => {
     localStorage.removeItem("user");
 
@@ -14,7 +13,6 @@ function AdminLayout() {
     navigate("/login", { replace: true });
   };
 
-  // Common styling for sidebar links
   const linkStyle = ({ isActive }) =>
     `block px-4 py-3 rounded-xl font-medium transition ${
       isActive
@@ -25,7 +23,6 @@ function AdminLayout() {
   return (
     <div className="min-h-screen bg-[#F5F1E8] flex">
 
-      {/* Sidebar */}
       <aside className="w-64 bg-white min-h-screen p-6 border-r border-[#3B2A22]/10">
 
         <h1 className="text-2xl font-bold text-[#3B2A22] mb-2">
@@ -52,7 +49,6 @@ function AdminLayout() {
 
         </nav>
 
-        {/* Logout */}
         <button
           onClick={handleLogout}
           className="w-full mt-12 px-4 py-3 rounded-xl text-left font-semibold text-red-700 hover:bg-red-50 transition"
@@ -62,7 +58,6 @@ function AdminLayout() {
 
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-6 md:p-10">
 
         <Outlet />

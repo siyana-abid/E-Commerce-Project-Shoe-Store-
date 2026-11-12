@@ -21,7 +21,6 @@ function ManageProducts() {
     stock: ""
   });
 
-  // Fetch products
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${API_URL}/products`);
@@ -33,7 +32,6 @@ function ManageProducts() {
     }
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({
       name: "",
@@ -48,7 +46,6 @@ function ManageProducts() {
     setShowForm(false);
   };
 
-  // Add or Update product
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -98,7 +95,6 @@ function ManageProducts() {
 
         toast.success("Product updated successfully");
       } else {
-        // Add new product
         const response = await axios.post(
           `${API_URL}/products`,
           {
@@ -123,7 +119,6 @@ function ManageProducts() {
     }
   };
 
-  // Open form for editing
   const handleEdit = (product) => {
     setFormData({
       name: product.name || "",
@@ -138,7 +133,6 @@ function ManageProducts() {
     setShowForm(true);
   };
 
-  // Activate or Deactivate product
   const handleToggleActive = async (product) => {
     const updatedStatus = product.active === false;
 
@@ -171,13 +165,11 @@ function ManageProducts() {
     fetchProducts();
   }, []);
 
-  // Get unique categories
   const categories = [
     "All",
     ...new Set(products.map((product) => product.category))
   ];
 
-  // Filter products
   const filteredProducts =
     selectedCategory === "All"
       ? products
@@ -188,7 +180,6 @@ function ManageProducts() {
   return (
     <div>
 
-      {/* Heading */}
       <h1 className="text-3xl font-bold text-[#3B2A22] mb-2">
         Manage Products
       </h1>
@@ -197,7 +188,6 @@ function ManageProducts() {
         View and manage your TREDORA shoe collection.
       </p>
 
-      {/* Add Product Button */}
       <button
         onClick={() => {
           if (showForm) {
@@ -212,7 +202,6 @@ function ManageProducts() {
         {showForm ? "Close Form" : "+ Add Product"}
       </button>
 
-      {/* Add / Edit Form */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -302,7 +291,6 @@ function ManageProducts() {
         </form>
       )}
 
-      {/* Category Filter */}
       <div className="bg-white p-5 rounded-2xl mb-6 border border-[#3B2A22]/10">
 
         <label className="block text-[#3B2A22] font-semibold mb-3">
@@ -323,7 +311,6 @@ function ManageProducts() {
 
       </div>
 
-      {/* Product Count */}
       <div className="bg-white p-6 rounded-2xl border border-[#3B2A22]/10 mb-6">
 
         <p className="text-[#8B776B] text-sm">
@@ -336,7 +323,6 @@ function ManageProducts() {
 
       </div>
 
-      {/* Products Table */}
       <div className="bg-white rounded-2xl border border-[#3B2A22]/10 overflow-hidden">
 
         <div className="p-6 border-b border-[#3B2A22]/10">
@@ -393,7 +379,6 @@ function ManageProducts() {
                       </span>
                     </td>
 
-                    {/* Action Buttons */}
                     <td className="p-4">
                       <div className="flex gap-2">
                         <button

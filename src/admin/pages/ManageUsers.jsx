@@ -10,12 +10,10 @@ function ManageUsers() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Fetch all users
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${API_URL}/users`);
 
-      // Exclude admin accounts
       const customers = response.data.filter(
         (user) => user.role !== "admin"
       );
@@ -32,7 +30,6 @@ function ManageUsers() {
     fetchUsers();
   }, []);
 
-  // Block / Unblock user
   const handleToggleBlock = async (user) => {
     const updatedBlockedStatus = user.blocked !== true;
 
@@ -67,7 +64,6 @@ function ManageUsers() {
     }
   };
 
-  // Activate / Deactivate user
   const handleToggleActive = async (user) => {
     const updatedStatus =
       user.status === "inactive" ? "active" : "inactive";
@@ -103,7 +99,6 @@ function ManageUsers() {
     }
   };
 
-  // Get user status
   const getUserStatus = (user) => {
     if (user.status === "inactive") {
       return "Inactive";
@@ -118,7 +113,6 @@ function ManageUsers() {
 
   return (
     <div>
-      {/* Heading */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#3B2A22]">
           Manage Users
@@ -129,7 +123,6 @@ function ManageUsers() {
         </p>
       </div>
 
-      {/* Total Users */}
       <div className="bg-white p-6 rounded-2xl border border-[#3B2A22]/10 mb-6">
         <p className="text-sm text-[#8B776B]">
           Total Registered Users
@@ -140,7 +133,6 @@ function ManageUsers() {
         </h2>
       </div>
 
-      {/* Users Table */}
       <div className="bg-white rounded-2xl border border-[#3B2A22]/10 overflow-hidden">
         <div className="p-6 border-b border-[#3B2A22]/10">
           <h2 className="text-xl font-semibold text-[#3B2A22]">
@@ -223,7 +215,6 @@ function ManageUsers() {
                             : "Block"}
                         </button>
 
-                        {/* Activate / Deactivate */}
                         <button
                           onClick={() => handleToggleActive(user)}
                           className="border border-[#3B2A22] text-[#3B2A22] px-3 py-2 rounded-lg text-sm hover:bg-[#F5F1E8]"

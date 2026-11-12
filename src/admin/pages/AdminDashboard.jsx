@@ -17,7 +17,6 @@ function AdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        {/* Products Card */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#3B2A22]/10">
           <h2 className="text-lg font-semibold text-[#3B2A22] mb-3">
             Products
@@ -35,7 +34,6 @@ function AdminDashboard() {
           </button>
         </div>
 
-        {/* Users Card */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#3B2A22]/10">
           <h2 className="text-lg font-semibold text-[#3B2A22] mb-3">
             Users

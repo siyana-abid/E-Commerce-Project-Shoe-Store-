@@ -20,7 +20,6 @@ import ProductDetails from "./pages/ProductDetails";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Admin imports
 import AdminLayout from "./admin/layouts/AdminLayout";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import ManageProducts from "./admin/pages/ManageProducts";
@@ -39,20 +38,17 @@ function App() {
 
       <Routes>
 
-        {/* Default Route */}
         <Route
           path="/"
           element={<Navigate to="/home" replace />}
         />
 
-        {/* Public Routes */}
         <Route path="/home" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* User Protected Routes */}
         <Route
           path="/cart"
           element={
@@ -89,7 +85,6 @@ function App() {
           }
         />
 
-        {/* Admin Protected Routes */}
         <Route
           path="/admin"
           element={
@@ -111,7 +106,6 @@ function App() {
           />
         </Route>
 
-        {/* Unknown Routes */}
       <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
