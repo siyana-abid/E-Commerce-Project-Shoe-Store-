@@ -14,6 +14,7 @@ function ProtectedRoute({
   const [checking, setChecking] = useState(true);
   const [userAllowed, setUserAllowed] = useState(false);
   const [wrongRole, setWrongRole] = useState(false);
+  const [blockedUser, setBlockedUser] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -42,13 +43,16 @@ function ProtectedRoute({
           currentUser.blocked === true ||
           currentUser.status === "inactive"
         ) {
-localStorage.removeItem("user");
-toast.error(
-  currentUser.blocked === true
-    ? "Your account has been blocked by admin."
-    : "Your account has been deactivated by admin."
-);
+          localStorage.removeItem("user");
+
+          toast.error(
+            currentUser.blocked === true
+              ? "Your account has been blocked by admin."
+              : "Your account has been deactivated by admin."
+          );
+
           if (isMounted) {
+            setBlockedUser(true);
             setUserAllowed(false);
             setWrongRole(false);
             setChecking(false);
@@ -67,6 +71,7 @@ toast.error(
         }
 
         if (isMounted) {
+          setBlockedUser(false);
           setWrongRole(false);
           setUserAllowed(true);
           setChecking(false);
@@ -105,6 +110,10 @@ toast.error(
   }
 
   if (!userAllowed) {
+    if (blockedUser) {
+      return <Navigate to="/login" replace />;
+    }
+
     if (wrongRole) {
       const user = JSON.parse(
         localStorage.getItem("user") || "null"

@@ -593,7 +593,7 @@
       "password": "fathima123",
       "role": "user",
       "id": "3JOmG_Mqg_E",
-      "blocked": false,
+      "blocked": true,
       "status": "active",
       "welcomeCouponUsed": true
     },
@@ -1420,7 +1420,16 @@
     },
     {
       "userId": "3JOmG_Mqg_E",
-      "items": [],
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "stock": 12,
+          "quantity": 1
+        }
+      ],
       "id": "cPmDZ8K--PU"
     },
     {
