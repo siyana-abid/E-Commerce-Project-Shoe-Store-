@@ -584,7 +584,8 @@
       "password": "siyana123",
       "role": "user",
       "id": "bESrBzbcp_E",
-      "status": "active"
+      "status": "active",
+      "blocked": false
     },
     {
       "name": "fathima",

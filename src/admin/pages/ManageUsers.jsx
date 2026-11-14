@@ -64,46 +64,7 @@ function ManageUsers() {
     }
   };
 
-  const handleToggleActive = async (user) => {
-    const updatedStatus =
-      user.status === "inactive" ? "active" : "inactive";
-
-    try {
-      const response = await axios.patch(
-        `${API_URL}/users/${user.id}`,
-        { status: updatedStatus }
-      );
-
-      setUsers((prev) =>
-        prev.map((item) =>
-          String(item.id) === String(user.id)
-            ? response.data
-            : item
-        )
-      );
-
-      if (
-        selectedUser &&
-        String(selectedUser.id) === String(user.id)
-      ) {
-        setSelectedUser(response.data);
-      }
-
-      toast.success(
-        updatedStatus === "inactive"
-          ? "User deactivated successfully"
-          : "User activated successfully"
-      );
-    } catch (error) {
-      toast.error("Failed to update user account");
-    }
-  };
-
   const getUserStatus = (user) => {
-    if (user.status === "inactive") {
-      return "Inactive";
-    }
-
     if (user.blocked === true) {
       return "Blocked";
     }
@@ -183,20 +144,19 @@ function ManageUsers() {
                     </td>
 
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-sm ${
-                        user.status === "inactive"
-                          ? "bg-gray-200 text-gray-700"
-                          : user.blocked === true
-                          ? "bg-red-100 text-red-700"
-                          : "bg-green-100 text-green-700"
-                      }`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          user.blocked === true
+                            ? "bg-red-100 text-red-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
                         {getUserStatus(user)}
                       </span>
                     </td>
 
                     <td className="p-4">
                       <div className="flex flex-wrap gap-2">
-                        {/* View Details */}
                         <button
                           onClick={() => setSelectedUser(user)}
                           className="bg-[#F5F1E8] text-[#3B2A22] px-3 py-2 rounded-lg text-sm hover:bg-[#e8dfd2]"
@@ -204,24 +164,13 @@ function ManageUsers() {
                           View
                         </button>
 
-                        {/* Block / Unblock */}
                         <button
                           onClick={() => handleToggleBlock(user)}
-                          disabled={user.status === "inactive"}
-                          className="bg-[#3B2A22] text-white px-3 py-2 rounded-lg text-sm hover:bg-[#51392e] disabled:opacity-40"
+                          className="bg-[#3B2A22] text-white px-3 py-2 rounded-lg text-sm hover:bg-[#51392e]"
                         >
                           {user.blocked === true
                             ? "Unblock"
                             : "Block"}
-                        </button>
-
-                        <button
-                          onClick={() => handleToggleActive(user)}
-                          className="border border-[#3B2A22] text-[#3B2A22] px-3 py-2 rounded-lg text-sm hover:bg-[#F5F1E8]"
-                        >
-                          {user.status === "inactive"
-                            ? "Activate"
-                            : "Deactivate"}
                         </button>
                       </div>
                     </td>

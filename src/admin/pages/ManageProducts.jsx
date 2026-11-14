@@ -391,8 +391,8 @@ function ManageProducts() {
                           onClick={() => handleToggleActive(product)}
                           className={`text-white px-4 py-2 rounded-lg ${
                             product.active === false
-                              ? "bg-green-600 hover:bg-green-700"
-                              : "bg-red-600 hover:bg-red-700"
+                              ? "bg-[#6B8E6B] hover:bg-[#557755]"
+                              : "bg-[#3B2A22] hover:bg-[#51392e]"
                           }`}
                         >
                           {product.active === false
