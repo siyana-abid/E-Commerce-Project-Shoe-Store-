@@ -106,7 +106,7 @@
       "price": 2900,
       "image": "https://i.pinimg.com/736x/6b/f0/e1/6bf0e17866653c558a3c2e85896b8b77.jpg",
       "description": "Versatile black sneakers",
-      "stock": 0,
+      "stock": 10,
       "active": true
     },
     {
@@ -386,7 +386,7 @@
       "price": 3900,
       "image": "https://i.pinimg.com/1200x/c8/cd/87/c8cd877c762f4c86e7e0a1845261af05.jpg",
       "description": "Elegant stiletto heels",
-      "stock": 14,
+      "stock": 13,
       "active": true
     },
     {
@@ -1327,6 +1327,35 @@
       "orderDate": "2026-11-11T14:25:36.454Z",
       "status": "Confirmed",
       "id": "ixdCs598tX0"
+    },
+    {
+      "userId": "KlI9hXZucfI",
+      "userName": "siyana",
+      "items": [
+        {
+          "productId": "39",
+          "name": "Elegant Stiletto Heels",
+          "price": 3900,
+          "image": "https://i.pinimg.com/1200x/c8/cd/87/c8cd877c762f4c86e7e0a1845261af05.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "subtotal": 3900,
+      "discountAmount": 0,
+      "couponCode": null,
+      "totalPrice": 3900,
+      "shippingAddress": {
+        "fullName": "nihala basith",
+        "phone": "3244521567",
+        "address": "abcd house palakkad",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "123456"
+      },
+      "orderDate": "2026-11-14T04:30:40.158Z",
+      "status": "Confirmed",
+      "id": "_0mf-GvN0GM"
     }
   ],
   "carts": [

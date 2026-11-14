@@ -79,7 +79,6 @@ function ManageProducts() {
       };
 
       if (editingId !== null) {
-        // Update existing product
         const response = await axios.patch(
           `${API_URL}/products/${editingId}`,
           productData
