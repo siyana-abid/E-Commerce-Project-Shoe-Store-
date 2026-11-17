@@ -1,14 +1,17 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const PRODUCTS_PER_PAGE = 5;
 
 function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("latest");
+  const [currentPage, setCurrentPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -21,10 +24,21 @@ function ManageProducts() {
     stock: ""
   });
 
+  // Sort products by latest added date
+  const sortNewestFirst = (items) => {
+    return [...items].sort((a, b) => {
+      if (!a.createdAt) return 1;
+      if (!b.createdAt) return -1;
+
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  };
+
+  // Fetch products from JSON Server
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${API_URL}/products`);
-      setProducts(response.data);
+      setProducts(sortNewestFirst(response.data));
     } catch (error) {
       toast.error("Failed to load products");
     } finally {
@@ -32,6 +46,7 @@ function ManageProducts() {
     }
   };
 
+  // Reset form
   const resetForm = () => {
     setFormData({
       name: "",
@@ -46,14 +61,28 @@ function ManageProducts() {
     setShowForm(false);
   };
 
+  // Add or update product
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const price = Number(formData.price);
+    const stock = Number(formData.stock);
+
     if (
-      Number(formData.price) <= 0 ||
-      Number(formData.stock) < 0
+      formData.price.trim() === "" ||
+      !Number.isFinite(price) ||
+      price < 1
     ) {
-      toast.error("Enter valid price and stock");
+      toast.error("Price must be at least ₹1");
+      return;
+    }
+
+    if (
+      formData.stock.trim() === "" ||
+      !Number.isInteger(stock) ||
+      stock < 0
+    ) {
+      toast.error("Enter valid stock");
       return;
     }
 
@@ -74,41 +103,63 @@ function ManageProducts() {
         ...formData,
         name: formData.name.trim(),
         category: formData.category.trim(),
-        price: Number(formData.price),
-        stock: Number(formData.stock)
+        price,
+        stock
       };
 
       if (editingId !== null) {
+        // Update existing product
         const response = await axios.patch(
           `${API_URL}/products/${editingId}`,
           productData
         );
 
         setProducts((prev) =>
-          prev.map((product) =>
-            String(product.id) === String(editingId)
-              ? response.data
-              : product
+          sortNewestFirst(
+            prev.map((product) =>
+              String(product.id) === String(editingId)
+                ? response.data
+                : product
+            )
           )
         );
 
         toast.success("Product updated successfully");
       } else {
+        // Generate the next numeric product ID
+        const nextId =
+          products.reduce((maxId, product) => {
+            const id = Number(product.id);
+
+            return Number.isFinite(id)
+              ? Math.max(maxId, id)
+              : maxId;
+          }, 0) + 1;
+
+        // Add new product
         const response = await axios.post(
           `${API_URL}/products`,
           {
             ...productData,
-            active: true
+            id: nextId,
+            active: true,
+            createdAt: new Date().toISOString()
           }
         );
 
-        setProducts((prev) => [...prev, response.data]);
+        setProducts((prev) =>
+          sortNewestFirst([response.data, ...prev])
+        );
+
+        setSelectedCategory("All");
+        setSearch("");
+        setSortOrder("latest");
+        setCurrentPage(1);
 
         toast.success("Product added successfully");
       }
 
       resetForm();
-
     } catch (error) {
       toast.error(
         editingId !== null
@@ -118,6 +169,7 @@ function ManageProducts() {
     }
   };
 
+  // Edit product
   const handleEdit = (product) => {
     setFormData({
       name: product.name || "",
@@ -132,6 +184,7 @@ function ManageProducts() {
     setShowForm(true);
   };
 
+  // Activate or deactivate product
   const handleToggleActive = async (product) => {
     const updatedStatus = product.active === false;
 
@@ -154,7 +207,6 @@ function ManageProducts() {
           ? "Product activated successfully"
           : "Product deactivated successfully"
       );
-
     } catch (error) {
       toast.error("Failed to update product status");
     }
@@ -164,21 +216,48 @@ function ManageProducts() {
     fetchProducts();
   }, []);
 
+  // Get categories
   const categories = [
     "All",
     ...new Set(products.map((product) => product.category))
   ];
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter(
-          (product) => product.category === selectedCategory
-        );
+  // Search and category filter
+  let filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.category.toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "All" ||
+      product.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // Sort products
+  if (sortOrder === "lowToHigh") {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sortOrder === "highToLow") {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  } else {
+    filteredProducts = sortNewestFirst(filteredProducts);
+  }
+
+  // Pagination
+  const totalPages = Math.ceil(
+    filteredProducts.length / PRODUCTS_PER_PAGE
+  );
+
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + PRODUCTS_PER_PAGE
+  );
 
   return (
     <div>
-
       <h1 className="text-3xl font-bold text-[#3B2A22] mb-2">
         Manage Products
       </h1>
@@ -201,12 +280,12 @@ function ManageProducts() {
         {showForm ? "Close Form" : "+ Add Product"}
       </button>
 
+      {/* Add / Edit Form */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-2xl border border-[#3B2A22]/10 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-
           <h2 className="text-xl font-semibold text-[#3B2A22] md:col-span-2">
             {editingId !== null ? "Edit Product" : "Add New Product"}
           </h2>
@@ -236,7 +315,7 @@ function ManageProducts() {
           <input
             type="number"
             placeholder="Price"
-            min="0.01"
+            min="1"
             step="0.01"
             value={formData.price}
             onChange={(e) =>
@@ -286,20 +365,29 @@ function ManageProducts() {
           >
             {editingId !== null ? "Update Product" : "Save Product"}
           </button>
-
         </form>
       )}
 
-      <div className="bg-white p-5 rounded-2xl mb-6 border border-[#3B2A22]/10">
-
-        <label className="block text-[#3B2A22] font-semibold mb-3">
-          Filter by Category
-        </label>
+      {/* Search, Category and Sort */}
+      <div className="bg-white p-5 rounded-2xl mb-6 border border-[#3B2A22]/10 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Search product..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="p-3 rounded-xl border"
+        />
 
         <select
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full md:w-64 p-3 rounded-xl border border-[#3B2A22]/20 bg-[#F5F1E8] text-[#3B2A22]"
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="p-3 rounded-xl border bg-[#F5F1E8] text-[#3B2A22]"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -308,10 +396,22 @@ function ManageProducts() {
           ))}
         </select>
 
+        <select
+          value={sortOrder}
+          onChange={(e) => {
+            setSortOrder(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="p-3 rounded-xl border bg-[#F5F1E8] text-[#3B2A22]"
+        >
+          <option value="latest">Latest First</option>
+          <option value="lowToHigh">Price: Low to High</option>
+          <option value="highToLow">Price: High to Low</option>
+        </select>
       </div>
 
+      {/* Product Count */}
       <div className="bg-white p-6 rounded-2xl border border-[#3B2A22]/10 mb-6">
-
         <p className="text-[#8B776B] text-sm">
           Products Found
         </p>
@@ -319,11 +419,10 @@ function ManageProducts() {
         <h2 className="text-3xl font-bold text-[#3B2A22] mt-2">
           {loading ? "..." : filteredProducts.length}
         </h2>
-
       </div>
 
+      {/* Products Table */}
       <div className="bg-white rounded-2xl border border-[#3B2A22]/10 overflow-hidden">
-
         <div className="p-6 border-b border-[#3B2A22]/10">
           <h2 className="text-xl font-semibold text-[#3B2A22]">
             All Products
@@ -334,16 +433,14 @@ function ManageProducts() {
           <p className="p-6">Loading products...</p>
         ) : filteredProducts.length === 0 ? (
           <p className="p-6 text-[#8B776B]">
-            No products found in this category.
+            No products found.
           </p>
         ) : (
           <div className="overflow-x-auto">
-
             <table className="w-full text-left">
-
               <thead className="bg-[#F5F1E8] text-[#3B2A22]">
                 <tr>
-                  <th className="p-4">ID</th>
+                  <th className="p-4">Product ID</th>
                   <th className="p-4">Product Name</th>
                   <th className="p-4">Category</th>
                   <th className="p-4">Price</th>
@@ -354,18 +451,23 @@ function ManageProducts() {
               </thead>
 
               <tbody>
-                {filteredProducts.map((product) => (
+                {paginatedProducts.map((product, index) => (
                   <tr
                     key={product.id}
                     className="border-t border-[#3B2A22]/10 text-[#3B2A22]"
                   >
+
+                    {/* Actual database ID */}
                     <td className="p-4">{product.id}</td>
-                    <td className="p-4 font-medium">{product.name}</td>
+
+                    <td className="p-4 font-medium">
+                      {product.name}
+                    </td>
+
                     <td className="p-4">{product.category}</td>
                     <td className="p-4">₹{product.price}</td>
                     <td className="p-4">{product.stock}</td>
 
-                    {/* Product Status */}
                     <td className="p-4">
                       <span
                         className={`px-3 py-1 rounded-full text-sm ${
@@ -401,18 +503,38 @@ function ManageProducts() {
                         </button>
                       </div>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
-
           </div>
         )}
 
-      </div>
+        {/* Pagination */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 p-5 border-t">
+            <button
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-[#3B2A22] text-white disabled:opacity-40"
+            >
+              Previous
+            </button>
 
+            <span className="text-[#3B2A22]">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-[#3B2A22] text-white disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@
       "price": 5200,
       "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
       "description": "Lightweight running shoes",
-      "stock": 12,
+      "stock": 8,
       "active": true
     },
     {
@@ -47,7 +47,7 @@
       "price": 5000,
       "image": "https://i.pinimg.com/736x/be/aa/f0/beaaf0967dc7349f6e2b6bebac060d25.jpg",
       "description": "Shoes designed for training",
-      "stock": 15,
+      "stock": 14,
       "active": true
     },
     {
@@ -57,7 +57,7 @@
       "price": 3200,
       "image": "https://i.pinimg.com/1200x/b3/07/a6/b307a603de0535295f6ad316942344a9.jpg",
       "description": "Comfortable daily running shoes",
-      "stock": 15,
+      "stock": 14,
       "active": true
     },
     {
@@ -556,18 +556,39 @@
       "price": 5200,
       "image": "https://i.pinimg.com/1200x/fb/ca/74/fbca7446a5661e0425a09972707f11d2.jpg",
       "description": "Premium formal footwear",
-      "stock": 15,
+      "stock": 14,
       "active": true
     },
     {
-      "name": "Puma Runner",
-      "category": "Sports",
-      "price": 1999,
-      "image": "https://i.pinimg.com/736x/dd/44/82/dd44822d630c9845127788568081ea6f.jpg",
-      "description": "AirFlow Knit Upper",
-      "stock": 10,
+      "name": "abcdefg",
+      "category": "sports",
+      "price": 1000,
+      "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      "stock": 0,
       "active": true,
       "id": "57"
+    },
+    {
+      "name": "abcdefg",
+      "category": "sports",
+      "price": 0.01,
+      "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      "stock": 0,
+      "active": true,
+      "id": "57"
+    },
+    {
+      "name": "ihsxUIKJN",
+      "category": "sports",
+      "price": 1500,
+      "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+      "description": "jnwckjcknw nk ",
+      "stock": 5,
+      "id": "sTriXJXEAUg",
+      "active": true,
+      "createdAt": "2026-11-17T05:28:33.980Z"
     }
   ],
   "users": [
@@ -593,7 +614,7 @@
       "password": "fathima123",
       "role": "user",
       "id": "3JOmG_Mqg_E",
-      "blocked": true,
+      "blocked": false,
       "status": "active",
       "welcomeCouponUsed": true
     },
@@ -705,6 +726,15 @@
       "password": "saifu1234",
       "role": "user",
       "id": "JvhVe2GVGxE"
+    },
+    {
+      "name": "abcd",
+      "email": "abcd@gmail.com",
+      "password": "12345678",
+      "role": "user",
+      "id": "sIYWPvbvMqw",
+      "welcomeCouponUsed": true,
+      "blocked": false
     }
   ],
   "orders": [
@@ -1357,6 +1387,129 @@
       "orderDate": "2026-11-14T04:30:40.158Z",
       "status": "Confirmed",
       "id": "_0mf-GvN0GM"
+    },
+    {
+      "userId": "sIYWPvbvMqw",
+      "userName": "abcd",
+      "items": [
+        {
+          "productId": "5",
+          "name": "Nike Training Shoes",
+          "price": 5000,
+          "image": "https://i.pinimg.com/736x/be/aa/f0/beaaf0967dc7349f6e2b6bebac060d25.jpg",
+          "quantity": 1
+        },
+        {
+          "productId": "6",
+          "name": "Running Sneakers",
+          "price": 3200,
+          "image": "https://i.pinimg.com/1200x/b3/07/a6/b307a603de0535295f6ad316942344a9.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 2,
+      "subtotal": 8200,
+      "discountAmount": 1640,
+      "couponCode": "WELCOME20",
+      "totalPrice": 6560,
+      "shippingAddress": {
+        "fullName": "abcd",
+        "phone": "3244521567",
+        "address": "sqkjdahuifhfun",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "123456"
+      },
+      "orderDate": "2026-11-14T12:12:14.902Z",
+      "status": "Confirmed",
+      "id": "-Is-bHWuRgM"
+    },
+    {
+      "userId": "sIYWPvbvMqw",
+      "userName": "abcd",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Adidas Ultraboost",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
+          "quantity": 4
+        }
+      ],
+      "totalItems": 4,
+      "subtotal": 20800,
+      "discountAmount": 0,
+      "couponCode": null,
+      "totalPrice": 20800,
+      "shippingAddress": {
+        "fullName": "abcd",
+        "phone": "3244521567",
+        "address": "sdklVMKL",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "567898"
+      },
+      "orderDate": "2026-11-14T12:13:17.914Z",
+      "status": "Confirmed",
+      "id": "wsE8Z9S29RU"
+    },
+    {
+      "userId": "sIYWPvbvMqw",
+      "userName": "abcd",
+      "items": [
+        {
+          "productId": "WlhQk-FPIbw",
+          "name": "abcdefg",
+          "price": 0.01,
+          "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "subtotal": 0.01,
+      "discountAmount": 0,
+      "couponCode": null,
+      "totalPrice": 0.01,
+      "shippingAddress": {
+        "fullName": "abcd",
+        "phone": "3244521567",
+        "address": "cmm,LAMKLCm",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "345678"
+      },
+      "orderDate": "2026-11-14T12:38:00.423Z",
+      "status": "Confirmed",
+      "id": "8XlfPvC0xKI"
+    },
+    {
+      "userId": "KlI9hXZucfI",
+      "userName": "siyana",
+      "items": [
+        {
+          "productId": "56",
+          "name": "Premium Formal Shoes",
+          "price": 5200,
+          "image": "https://i.pinimg.com/1200x/fb/ca/74/fbca7446a5661e0425a09972707f11d2.jpg",
+          "quantity": 1
+        }
+      ],
+      "totalItems": 1,
+      "subtotal": 5200,
+      "discountAmount": 0,
+      "couponCode": null,
+      "totalPrice": 5200,
+      "shippingAddress": {
+        "fullName": "siyana",
+        "phone": "3244521567",
+        "address": "cgijeywuihkj",
+        "city": "kannur",
+        "state": "kerala",
+        "pincode": "123456"
+      },
+      "orderDate": "2026-11-17T08:56:10.123Z",
+      "status": "Confirmed",
+      "id": "vl6mkh-2y94"
     }
   ],
   "carts": [
@@ -1453,24 +1606,7 @@
     },
     {
       "userId": "KlI9hXZucfI",
-      "items": [
-        {
-          "productId": "2",
-          "name": "Adidas Ultraboost",
-          "price": 5200,
-          "image": "https://i.pinimg.com/1200x/ae/a9/2d/aea92d3c89671fab30984b7b17c06914.jpg",
-          "stock": 14,
-          "quantity": 2
-        },
-        {
-          "productId": "1",
-          "name": "Nike Air Max",
-          "price": 4500,
-          "image": "https://i.pinimg.com/736x/1f/1e/2e/1f1e2e091a85491acec00f5d013269ee.jpg",
-          "stock": 15,
-          "quantity": 1
-        }
-      ],
+      "items": [],
       "id": "D70fe06M8JM"
     },
     {
@@ -1505,6 +1641,20 @@
       "userId": "hfPDYZ6i39E",
       "items": [],
       "id": "Cz4mHkNAZfM"
+    },
+    {
+      "userId": "sIYWPvbvMqw",
+      "items": [
+        {
+          "productId": "48",
+          "name": "Classic Monk Strap Shoes",
+          "price": 4700,
+          "image": "https://i.pinimg.com/736x/ad/5c/21/ad5c21fa9d95836be803a24ca33b2500.jpg",
+          "stock": 15,
+          "quantity": 1
+        }
+      ],
+      "id": "jge7qXzK0EQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
